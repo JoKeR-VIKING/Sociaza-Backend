@@ -65,3 +65,21 @@ export class JoiRequestValidationError extends CustomError {
         super(message);
     }
 }
+
+export class ServerError extends CustomError {
+    code = HTTP_STATUS.SERVICE_UNAVAILABLE;
+    status = "Error";
+
+    constructor(message: string) {
+        super(message);
+    }
+}
+
+export class NotAuthorizedError extends CustomError {
+    code = HTTP_STATUS.UNAUTHORIZED;
+    status = "Error";
+
+    constructor(message: string) {
+        super(message);
+    }
+}

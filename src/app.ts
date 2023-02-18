@@ -1,7 +1,7 @@
 import express, { Express } from 'express';
-import { SociazaServer } from './setupServer';
-import { Config } from './config';
-import databaseConnection from './setupDatabase';
+import { SociazaServer } from '@root/setupServer';
+import { Config } from '@root/config';
+import databaseConnection from '@root/setupDatabase';
 
 class Application {
     public start(): void {
@@ -14,6 +14,7 @@ class Application {
 
     private loadConfig(): void {
         Config.validateConfig();
+        Config.cloudinaryConfig();
     }
 }
 

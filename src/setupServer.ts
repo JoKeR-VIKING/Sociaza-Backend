@@ -1,13 +1,13 @@
-import {Application, json, urlencoded, Response, Request, NextFunction, request} from 'express';
-import { Config } from './config';
-import applicationRoutes from './routes';
-import { BadRequestError, NotFoundError, FileTooLargeError, JoiRequestValidationError, IErrorResponse, CustomError } from './shared/globals/helpers/errorHandler'
+import { Application, json, urlencoded, Response, Request, NextFunction } from 'express';
+import { Config } from '@root/config';
+import applicationRoutes from '@root/routes';
+import { BadRequestError, NotFoundError, FileTooLargeError, JoiRequestValidationError, IErrorResponse, CustomError } from '@globals/helpers/errorHandler';
 import http from 'http';
 import cors from 'cors';
-import helmet, {expectCt} from 'helmet';
+import helmet from 'helmet';
 import hpp from 'hpp';
 import compression from 'compression';
-import cookieSession from 'cookie-session';
+import cookierSession from 'cookie-session';
 import Logger from 'bunyan';
 import HTTP_STATUS from 'http-status-codes';
 import { Server } from 'socket.io';
@@ -27,7 +27,7 @@ export class SociazaServer {
 
     private securityMiddleware(app: Application): void {
         app.use(
-            cookieSession ({
+            cookierSession ({
                 name: 'session',
                 keys: [Config.SECRET_KEY_ONE!, Config.SECRET_KEY_TWO!],
                 maxAge: 24 * 3600 * 1000,
@@ -35,8 +35,8 @@ export class SociazaServer {
             })
         );
 
-        app.use(hpp);
-        app.use(helmet);
+        app.use(hpp());
+        app.use(helmet());
 
         app.use(
             cors ({
@@ -111,7 +111,7 @@ export class SociazaServer {
         })
     };
 
-    private socketIOConnections(io: Server): void {}
+    private socketIOConnections(io: Server): void {};
 
     public start() : void {
         this.securityMiddleware(this.app);

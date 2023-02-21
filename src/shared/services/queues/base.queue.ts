@@ -4,11 +4,12 @@ import { Config } from '@root/config';
 import { createBullBoard } from '@bull-board/express';
 import { BullAdapter } from '@bull-board/api/bullAdapter';
 import { ExpressAdapter } from '@bull-board/express';
-import {IAuthJob} from "@auth/interfaces/auth.interface";
+import { IAuthJob } from '@auth/interfaces/auth.interface';
+import { IEmailJob } from '@user/interfaces/user.interface';
 
 let bullAdapters: BullAdapter[] = [];
 
-type IBaseJobData = IAuthJob;
+type IBaseJobData = IAuthJob | IEmailJob;
 
 export let serverAdapter: ExpressAdapter;
 

@@ -19,8 +19,32 @@ class AuthService {
         return await AuthModel.findOne(query).exec() as IAuthDocument;
     }
 
+    public async getUserByEmail(email: string): Promise<IAuthDocument> {
+        const query = {
+            email: Helpers.lowercase(email)
+        }
+
+        return await AuthModel.findOne(query).exec() as IAuthDocument;
+    }
+
+    public async getUserByPasswordToken(token: string): Promise<IAuthDocument> {
+        const query = {
+            passwordResetToken: token,
+            passwordResetExpires: { $gt: Date.now() }
+        }
+
+        return await AuthModel.findOne(query).exec() as IAuthDocument;
+    }
+
     public async createAuthUser(data: IAuthDocument): Promise<void> {
         await AuthModel.create(data);
+    }
+
+    public async updateAuthUser(authId: string, token: string, tokenExpiration: number): Promise<void> {
+        await AuthModel.updateOne({ _id: authId }, {
+            passwordResetToken: token,
+            passwordResetExpires: tokenExpiration,
+        });
     }
 }
 

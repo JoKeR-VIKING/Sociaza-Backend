@@ -10,8 +10,6 @@ const log: Logger = Config.createLogger('authMiddleware');
 
 export class AuthMiddleware {
     public verifyUser(req: Request, _res: Response, next: NextFunction): void {
-        log.info('ok!');
-
         if (!req.session!.jwt) {
             throw new NotAuthorizedError('Session expired. Please login again.');
         }

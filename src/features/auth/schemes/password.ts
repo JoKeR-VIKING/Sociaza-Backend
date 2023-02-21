@@ -3,11 +3,14 @@ import { JoiPasswordExtend, joiPasswordExtendCore } from 'joi-password';
 
 const JoiPassword: JoiPasswordExtend = Joi.extend(joiPasswordExtendCore);
 
-const passwordResetSchema: ObjectSchema = Joi.object().keys({
+const emailSchema: ObjectSchema = Joi.object().keys({
     email: Joi.string().required().email().messages({
         'any.required': 'Email is required',
         'string.email': 'Email must be valid',
     }),
+});
+
+const passwordResetSchema: ObjectSchema = Joi.object().keys({
     password: JoiPassword.string().required().min(8).minOfLowercase(1).minOfUppercase(1).minOfNumeric(1).minOfSpecialCharacters(1).messages({
         'any.required': 'Password is required',
         'password.minOfLowercase': 'Password must have atleast 1 lowercase character',
@@ -24,4 +27,4 @@ const passwordResetSchema: ObjectSchema = Joi.object().keys({
     }),
 });
 
-export { passwordResetSchema };
+export { emailSchema, passwordResetSchema };

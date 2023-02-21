@@ -24,17 +24,7 @@ export interface IUserDocument extends Document
     bgImageVersion: string;
     bgImageId: string;
     profilePicture: string;
-    passwordResetToken?: string;
-    passwordResetExpires?: number | string;
     createdAt?: Date;
-}
-
-export interface IResetPasswordParams
-{
-    username: string;
-    email: string;
-    ipaddress: string;
-    date: string;
 }
 
 export interface INotificationSettings

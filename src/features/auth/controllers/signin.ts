@@ -6,9 +6,13 @@ import HTTP_STATUS from 'http-status-codes';
 import { authService } from '@services/db/auth.service';
 import { BadRequestError } from '@globals/helpers/errorHandler';
 import { signinSchema } from '@auth/schemes/signin';
-import { IAuthDocument } from "@auth/interfaces/auth.interface";
-import {IUserDocument} from "@user/interfaces/user.interface";
-import {userService} from "@services/db/user.service";
+import { IAuthDocument } from '@auth/interfaces/auth.interface';
+import { IUserDocument } from '@user/interfaces/user.interface';
+import { userService } from '@services/db/user.service';
+import { mailTransport } from '@services/emails/mail.transporter';
+import { emailQueue} from '@services/queues/email.queue';
+import { resetPasswordTemplate } from '@services/emails/templates/resetPassword/reset.password.template';
+import publicIp from 'ip';
 
 export class SignIn {
     @joiValidation(signinSchema)
@@ -47,6 +51,13 @@ export class SignIn {
             uId: authUser.uId,
             createdAt: authUser.createdAt
         } as IUserDocument;
+
+        const template: string = resetPasswordTemplate.template(username, authUser.email!, publicIp.address());
+        emailQueue.addEmailJob('forgotPasswordEmail', {
+            receiverEmail: 'tyrese.runolfsdottir@ethereal.email',
+            template: template,
+            subject: 'Password reset completed confirmation'
+        });
 
         res.status(HTTP_STATUS.OK).json({ message: 'User logged in successfully', user: userDocument, token: userJwt });
     }

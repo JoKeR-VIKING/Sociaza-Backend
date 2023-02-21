@@ -3,6 +3,7 @@ import { SignUp } from '@auth/controllers/signup';
 import { SignIn } from '@auth/controllers/signin';
 import { Signout } from '@auth/controllers/signout';
 import { authMiddleware } from '@globals/helpers/authMiddleware';
+import { Password } from '@auth/controllers/password';
 
 class AuthRoutes {
     private readonly authRouter: Router;
@@ -16,6 +17,8 @@ class AuthRoutes {
     public routes(): Router {
         this.authRouter.post('/signup', SignUp.prototype.create);
         this.authRouter.post('/signin', SignIn.prototype.read);
+        this.authRouter.post('/forgot-password', Password.prototype.create);
+        this.authRouter.post('/reset-password/:token', Password.prototype.update);
 
         return this.authRouter;
     }

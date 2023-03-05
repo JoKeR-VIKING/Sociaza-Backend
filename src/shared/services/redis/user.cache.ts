@@ -75,7 +75,7 @@ export class UserCache extends BaseCache {
                 await this.client.connect();
             }
 
-            await this.client.ZADD('user', {
+            await this.client.ZADD('users', {
                 score: parseInt(userUId, 10), value: `${key}`
             });
 
@@ -94,7 +94,7 @@ export class UserCache extends BaseCache {
                 await this.client.connect();
             }
 
-            const userFromCache: IUserDocument = await this.client.HGETALL(`user:${userId}`) as unknown as IUserDocument;
+            const userFromCache: IUserDocument = await this.client.HGETALL(`users:${userId}`) as unknown as IUserDocument;
             userFromCache.createdAt = new Date(Helpers.parseJson(`${userFromCache.createdAt}`));
             userFromCache.postsCount = Helpers.parseJson(`${userFromCache.postsCount}`);
             userFromCache.blocked = Helpers.parseJson(`${userFromCache.blocked}`);

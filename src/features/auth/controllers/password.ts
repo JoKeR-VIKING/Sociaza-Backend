@@ -11,12 +11,14 @@ import { forgotPasswordTemplate } from '@services/emails/templates/forgotPasswor
 import { resetPasswordTemplate } from '@services/emails/templates/resetPassword/reset.password.template';
 import { emailQueue } from '@services/queues/email.queue';
 import publicIp from 'ip';
+import {passwordSchema} from "@auth/schemes/signup.scheme";
 
 export class Password {
     @joiValidation(emailSchema)
     public async create(req: Request, res: Response): Promise<void> {
         const { email } = req.body;
         const user: IAuthDocument = await authService.getUserByEmail(email);
+
         if (!user)
             throw new BadRequestError('User with email does not exist.');
 
@@ -39,6 +41,12 @@ export class Password {
     @joiValidation(passwordResetSchema)
     public async update(req: Request, res: Response): Promise<void> {
         const { password, confirmPassword } = req.body;
+
+        const err: any[] = passwordSchema.validate(password, { details: true }) as any[];
+        console.log(err);
+        if (err.length > 0)
+            throw new BadRequestError(err[0].message);
+
         const { token } = req.params;
         const user: IAuthDocument = await authService.getUserByPasswordToken(token);
         if (!user)

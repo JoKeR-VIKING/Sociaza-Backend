@@ -1,7 +1,7 @@
 import { ObjectId } from 'mongodb';
 import { Request, Response } from 'express';
 import { joiValidation } from '@globals/decorators/joiValidationDecorators';
-import { signupSchema } from '@auth/schemes/signup';
+import { signupSchema } from '@auth/schemes/signup.scheme';
 import { IAuthDocument, ISignupData } from '@auth/interfaces/auth.interface';
 import { authService } from '@services/db/auth.service';
 import { BadRequestError } from '@globals/helpers/errorHandler';
@@ -40,10 +40,11 @@ export class SignUp {
             password: password,
             avatarColor: avatarColor
         });
+
         const result: UploadApiResponse = await uploads(avatarImage, `${userObjectId}`, true, true) as UploadApiResponse;
 
         if (!result?.public_id) {
-            throw new BadRequestError('File upload: Error occured while uploading image');
+            throw new BadRequestError(result.message);
         }
 
         const userDataForCache: IUserDocument = SignUp.prototype.userData(authData, userObjectId);
@@ -51,7 +52,7 @@ export class SignUp {
         await userCache.saveUserToCache(`${userObjectId}`, uId, userDataForCache);
 
         omit(userDataForCache, ['uId', 'username', 'email', 'avatarColor', 'password']);
-        authQueue.addAuthUserJob('addUserAuthToDB', { value: userDataForCache });
+        authQueue.addAuthUserJob('addUserAuthToDB', { value: authData });
         userQueue.addUserJob('addUserToDB', { value: userDataForCache });
 
         const userJwt: string = SignUp.prototype.signUpToken(authData, userObjectId);
@@ -102,6 +103,7 @@ export class SignUp {
             quote: '',
             bgImageVersion: '',
             bgImageId: '',
+            postsCount: 0,
             followersCount: 0,
             followingCount: 0,
             notifications: {

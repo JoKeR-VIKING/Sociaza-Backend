@@ -5,7 +5,7 @@ import { joiValidation } from '@globals/decorators/joiValidationDecorators';
 import HTTP_STATUS from 'http-status-codes';
 import { authService } from '@services/db/auth.service';
 import { BadRequestError } from '@globals/helpers/errorHandler';
-import { signinSchema } from '@auth/schemes/signin';
+import { signinSchema } from '@auth/schemes/signin.scheme';
 import { IAuthDocument } from '@auth/interfaces/auth.interface';
 import { IUserDocument } from '@user/interfaces/user.interface';
 import { userService } from '@services/db/user.service';
@@ -33,7 +33,7 @@ export class SignIn {
         const user: IUserDocument = await userService.getUserByAuthId(`${authUser._id}`);
 
         const userJwt: string = JWT.sign({
-            userId: user.authId,
+            userId: user._id,
             uId: authUser.uId,
             email: authUser.email,
             username: authUser.username,
@@ -51,13 +51,6 @@ export class SignIn {
             uId: authUser.uId,
             createdAt: authUser.createdAt
         } as IUserDocument;
-
-        const template: string = resetPasswordTemplate.template(username, authUser.email!, publicIp.address());
-        emailQueue.addEmailJob('forgotPasswordEmail', {
-            receiverEmail: 'tyrese.runolfsdottir@ethereal.email',
-            template: template,
-            subject: 'Password reset completed confirmation'
-        });
 
         res.status(HTTP_STATUS.OK).json({ message: 'User logged in successfully', user: userDocument, token: userJwt });
     }

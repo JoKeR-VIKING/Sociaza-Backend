@@ -10,7 +10,7 @@ class UserService {
 
     public async getUserByAuthId(authId: string): Promise<IUserDocument> {
         const query = {
-            _id: authId
+            authId: authId
         };
 
         return await UserModel.findOne(query).exec() as IUserDocument;

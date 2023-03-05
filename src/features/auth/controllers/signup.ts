@@ -1,7 +1,7 @@
 import { ObjectId } from 'mongodb';
 import { Request, Response } from 'express';
 import { joiValidation } from '@globals/decorators/joiValidationDecorators';
-import { signupSchema } from '@auth/schemes/signup.scheme';
+import { passwordSchema, signupSchema } from '@auth/schemes/signup.scheme';
 import { IAuthDocument, ISignupData } from '@auth/interfaces/auth.interface';
 import { authService } from '@services/db/auth.service';
 import { BadRequestError } from '@globals/helpers/errorHandler';
@@ -24,6 +24,11 @@ export class SignUp {
     @joiValidation(signupSchema)
     public async create(req: Request, res: Response): Promise<void> {
         const { username, password, email, avatarColor, avatarImage } = req.body;
+        const err: any[] = passwordSchema.validate(password, { details: true }) as any[];
+        console.log(err);
+        if (err.length > 0)
+            throw new BadRequestError(err[0].message);
+
         const checkIfUserExists: IAuthDocument = await authService.getUserByUsernameOrEmail(username, email);
 
         if (checkIfUserExists)

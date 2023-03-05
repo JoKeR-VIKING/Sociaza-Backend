@@ -1,7 +1,10 @@
 import Joi, { ObjectSchema } from 'joi';
-import { JoiPasswordExtend, joiPasswordExtendCore } from 'joi-password';
+import PasswordValidator from 'password-validator';
 
-const JoiPassword: JoiPasswordExtend = Joi.extend(joiPasswordExtendCore);
+const passwordSchema: PasswordValidator = new PasswordValidator().has().lowercase(1, 'Password must have atleast 1 lowercase character').
+                                                                    has().uppercase(1, 'Password must have atleast 1 uppercase character').
+                                                                    has().digits(1, 'Password must have atleast 1 numeric character').
+                                                                    has().symbols(1, 'Password must have atleast 1 special character');
 
 const emailSchema: ObjectSchema = Joi.object().keys({
     email: Joi.string().required().email().messages({
@@ -11,12 +14,8 @@ const emailSchema: ObjectSchema = Joi.object().keys({
 });
 
 const passwordResetSchema: ObjectSchema = Joi.object().keys({
-    password: JoiPassword.string().required().min(8).minOfLowercase(1).minOfUppercase(1).minOfNumeric(1).minOfSpecialCharacters(1).messages({
+    password: Joi.string().required().min(8).messages({
         'any.required': 'Password is required',
-        'password.minOfLowercase': 'Password must have atleast 1 lowercase character',
-        'password.minOfUppercase': 'Password must have atleast 1 uppercase character',
-        'password.minOfNumeric': 'Password must have atleast 1 numeric character',
-        'password.minOfSpecialCharacters': 'Password must have atleast 1 special character',
         'string.empty': 'Password must have atleast 8 characters',
         'string.min': 'Password must have atleast 8 characters',
     }),
@@ -27,4 +26,4 @@ const passwordResetSchema: ObjectSchema = Joi.object().keys({
     }),
 });
 
-export { emailSchema, passwordResetSchema };
+export { emailSchema, passwordResetSchema, passwordSchema };

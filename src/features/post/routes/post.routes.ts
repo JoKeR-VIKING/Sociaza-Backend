@@ -3,7 +3,7 @@ import { authMiddleware } from '@globals/helpers/authMiddleware';
 import { CreatePost } from '@post/controllers/create.post';
 import { GetPost } from '@post/controllers/get.post';
 import { DeletePost } from '@post/controllers/delete.post';
-import {UpdatePost} from "@post/controllers/update.post";
+import { UpdatePost } from '@post/controllers/update.post';
 
 class PostRoutes {
     private readonly postRouter: Router;

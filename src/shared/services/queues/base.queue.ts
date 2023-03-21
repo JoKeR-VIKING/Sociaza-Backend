@@ -5,12 +5,13 @@ import { createBullBoard } from '@bull-board/express';
 import { BullAdapter } from '@bull-board/api/bullAdapter';
 import { ExpressAdapter } from '@bull-board/express';
 import { IAuthJob } from '@auth/interfaces/auth.interface';
-import { IEmailJob } from '@user/interfaces/user.interface';
+import { IEmailJob, IUserJob } from '@user/interfaces/user.interface';
 import { IPostJobData } from '@post/interfaces/post.interface';
+import { IReactionJob } from '@reaction/interfaces/reaction.interface';
 
 let bullAdapters: BullAdapter[] = [];
 
-type IBaseJobData = IAuthJob | IEmailJob | IPostJobData;
+type IBaseJobData = IAuthJob | IUserJob | IEmailJob | IPostJobData | IReactionJob;
 
 export let serverAdapter: ExpressAdapter;
 

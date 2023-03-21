@@ -1,11 +1,13 @@
+// noinspection ExceptionCaughtLocallyJS
+
 import { BaseCache } from '@services/redis/base.cache';
 import Logger from 'bunyan';
 import { Config } from '@root/config';
-import { ServerError } from '@globals/helpers/errorHandler';
-import { IReactions, IPostDocument, ISavePostToCache } from '@post/interfaces/post.interface';
+import {BadRequestError, ServerError} from '@globals/helpers/errorHandler';
+import { IPostDocument, ISavePostToCache } from '@post/interfaces/post.interface';
+import { IReactions } from '@reaction/interfaces/reaction.interface';
 import { Helpers } from '@globals/helpers/helpers';
 import { RedisCommandRawReply } from '@redis/client/dist/lib/commands'
-import {number} from "joi";
 
 const log: Logger = Config.createLogger('postCache');
 
@@ -225,7 +227,11 @@ export class PostCache extends BaseCache {
             if (!this.client.isOpen)
                 await this.client.connect();
 
-            const postCount: string[] = await this.client.HMGET(`users:${currentUserId}`, 'postCount');
+            const post = await this.client.HGETALL(`post:${key}`);
+            if (!post.id)
+                throw new BadRequestError('No such post exists!');
+
+            const postCount: string[] = await this.client.HMGET(`users:${currentUserId}`, 'postsCount');
             const multi: ReturnType<typeof this.client.multi> = this.client.multi();
 
             multi.ZREM('post', `${key}`);
@@ -234,7 +240,7 @@ export class PostCache extends BaseCache {
             multi.DEL(`reaction:${key}`);
 
             const count: number = parseInt(postCount[0], 10) - 1;
-            multi.HSET(`users:${key}`, 'postsCount', count);
+            multi.HSET(`users:${currentUserId}`, 'postsCount', count);
 
             await multi.exec();
         }

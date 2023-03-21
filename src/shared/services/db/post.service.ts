@@ -4,6 +4,7 @@ import { Helpers } from '@globals/helpers/helpers';
 import { PostModel } from '@post/models/post.schema';
 import { UserModel } from '@user/models/user.schema';
 import { Query, UpdateQuery } from 'mongoose';
+import {BadRequestError} from "@globals/helpers/errorHandler";
 
 class PostService {
     public async createPost(userId: string, data: IPostDocument): Promise<void> {
@@ -34,6 +35,10 @@ class PostService {
     }
 
     public async deletePost(postId: string, userId: string): Promise<void> {
+        const post: IPostDocument = await PostModel.findOne({ _id: postId }) as IPostDocument;
+        if (!post)
+            throw new BadRequestError('No such post exists!');
+
         const deletePost: Query<IQueryComplete & IQueryDeleted, IPostDocument> = PostModel.deleteOne({ _id: postId });
         // const deleteReaction
         const decerementPostCount: UpdateQuery<IUserDocument> = UserModel.updateOne({ _id: userId }, { $inc: { postsCount: -1 } });

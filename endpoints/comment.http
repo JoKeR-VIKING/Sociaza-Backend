@@ -1,0 +1,32 @@
+POST {{ baseUrl }}/{{ urlPath }}/post/comment
+Content-Type: application/json
+Accept: application/json
+withCredentials: true
+
+{
+    "userTo": "6401d80583eedaf5eb6d20e9",
+    "postId": "64115eff0b0724ace791afdd",
+    "comment": "What an amazing post!",
+    "profilePicture": "https://res.cloudinary.com/dslkigtvk/image/upload/v1677396622/63fb0a8cea6213a5ae251143.jpg"
+}
+
+###
+
+GET {{ baseUrl }}/{{ urlPath }}/post/comment/64115eff0b0724ace791afdd
+Content-Type: application/json
+Accept: application/json
+withCredentials: true
+
+###
+
+GET {{ baseUrl }}/{{ urlPath }}/post/comment/names/64115eff0b0724ace791afdd
+Content-Type: application/json
+Accept: application/json
+withCredentials: true
+
+###
+
+GET {{ baseUrl }}/{{ urlPath }}/post/comment/64115eff0b0724ace791afdd/641ad86ee0640cbfc9656c63
+Content-Type: application/json
+Accept: application/json
+withCredentials: true

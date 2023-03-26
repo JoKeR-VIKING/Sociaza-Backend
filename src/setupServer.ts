@@ -15,6 +15,8 @@ import { createClient } from 'redis';
 import { createAdapter } from '@socket.io/redis-adapter';
 import 'express-async-errors';
 import { SocketIOPostHandler } from '@sockets/post.socket';
+import { SocketIOUserHandler } from '@sockets/user';
+import { SocketIOFollowerHandler } from '@sockets/follower';
 
 const SERVER_PORT = 8000;
 const log: Logger = Config.createLogger('server');
@@ -114,7 +116,12 @@ export class SociazaServer {
 
     private socketIOConnections(io: Server): void {
         const postSocketHandler: SocketIOPostHandler = new SocketIOPostHandler(io);
+        const followerSocketHandler: SocketIOFollowerHandler = new SocketIOFollowerHandler(io);
+        const userSocketHandler: SocketIOUserHandler = new SocketIOUserHandler(io);
+
         postSocketHandler.listen();
+        followerSocketHandler.listen();
+        userSocketHandler.listen();
     };
 
     public start() : void {

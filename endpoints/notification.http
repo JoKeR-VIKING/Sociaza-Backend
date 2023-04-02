@@ -1,0 +1,18 @@
+PUT {{ baseUrl }}/{{ urlPath }}/notification/64214b0c4c243a451ecd1e70
+Content-Type: application/json
+Accept: application/json
+withCredentials: true
+
+###
+
+DELETE {{ baseUrl }}/{{ urlPath }}/notification/64214b0c4c243a451ecd1e70
+Content-Type: application/json
+Accept: application/json
+withCredentials: true
+
+###
+
+GET {{ baseUrl }}/{{ urlPath }}/notification
+Content-Type: application/json
+Accept: application/json
+withCredentials: true

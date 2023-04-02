@@ -7,7 +7,7 @@ import cors from 'cors';
 import helmet from 'helmet';
 import hpp from 'hpp';
 import compression from 'compression';
-import cookierSession from 'cookie-session';
+import cookieSession from 'cookie-session';
 import Logger from 'bunyan';
 import HTTP_STATUS from 'http-status-codes';
 import { Server } from 'socket.io';
@@ -17,6 +17,7 @@ import 'express-async-errors';
 import { SocketIOPostHandler } from '@sockets/post.socket';
 import { SocketIOUserHandler } from '@sockets/user';
 import { SocketIOFollowerHandler } from '@sockets/follower';
+import { SocketIONotificationHandler } from '@sockets/notification';
 
 const SERVER_PORT = 8000;
 const log: Logger = Config.createLogger('server');
@@ -30,7 +31,7 @@ export class SociazaServer {
 
     private securityMiddleware(app: Application): void {
         app.use(
-            cookierSession ({
+            cookieSession ({
                 name: 'session',
                 keys: [Config.SECRET_KEY_ONE!, Config.SECRET_KEY_TWO!],
                 maxAge: 24 * 3600 * 1000,
@@ -118,10 +119,12 @@ export class SociazaServer {
         const postSocketHandler: SocketIOPostHandler = new SocketIOPostHandler(io);
         const followerSocketHandler: SocketIOFollowerHandler = new SocketIOFollowerHandler(io);
         const userSocketHandler: SocketIOUserHandler = new SocketIOUserHandler(io);
+        const notificationSocketHandler: SocketIONotificationHandler = new SocketIONotificationHandler();
 
         postSocketHandler.listen();
         followerSocketHandler.listen();
         userSocketHandler.listen();
+        notificationSocketHandler.listen(io);
     };
 
     public start() : void {

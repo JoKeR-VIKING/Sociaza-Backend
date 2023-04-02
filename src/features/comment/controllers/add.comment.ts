@@ -28,7 +28,7 @@ export class AddComment {
         const databaseCommentData: ICommentJob = {
             postId: postId,
             userTo: userTo,
-            userFrom: `${req.currentUser!.userId}`,
+            userFrom: req.currentUser!.userId,
             username: req.currentUser!.username,
             comment: commentObject,
         };

@@ -7,6 +7,11 @@ import { IUserDocument } from '@user/interfaces/user.interface';
 import { IPostDocument } from '@post/interfaces/post.interface';
 import { omit } from 'lodash';
 import mongoose from "mongoose";
+import { INotificationDocument } from '@notification/interface/notification.interface';
+import { NotificationModel } from '@notification/models/notification.schema';
+import { socketIoNotificationObject } from '@sockets/notification';
+import { notificationTemplate } from '@services/emails/templates/notifications/notification.template';
+import { emailQueue } from '@services/queues/email.queue';
 
 const userCache: UserCache = new UserCache();
 
@@ -31,7 +36,34 @@ class ReactionService {
             ) as unknown as Promise<IPostDocument>
         ]);
 
-        // send reaction notification
+        if (updatedReaction[0]?.notifications.comments && userTo != userFrom) {
+            const notificationModel: INotificationDocument = new NotificationModel();
+            const notification = await notificationModel.insertNotification({
+                userTo: userTo as string,
+                userFrom: userFrom as string,
+                message: `${username} has reacted to your post`,
+                comment: '',
+                notificationType: 'reactions',
+                entityId: new mongoose.Types.ObjectId(userTo),
+                createdItemId: new mongoose.Types.ObjectId(updatedReaction[1]._id),
+                createdAt: new Date(),
+                post: updatedReaction[2].post,
+                imgId: updatedReaction[2].imgId!,
+                imgVersion: updatedReaction[2].imgVersion!,
+                gifUrl: updatedReaction[2].gifUrl!,
+                reaction: type!
+            });
+
+            socketIoNotificationObject.emit('insert notification', notification, { userTo: userTo });
+
+            const template: string = notificationTemplate.template({
+                username: username,
+                message: `${username} has reacted to your post`,
+                header: 'Reaction Notification'
+            });
+
+            emailQueue.addEmailJob('reactionEmail', { receiverEmail: updatedReaction[0].email!, subject: 'Sociaza follower notification', template: template });
+        }
     }
 
     public async removeReactionFromDb(reaction: IReactionJob): Promise<void> {

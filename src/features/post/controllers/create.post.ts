@@ -7,6 +7,7 @@ import { IPostDocument, ISavePostToCache } from '@post/interfaces/post.interface
 import { PostCache } from '@services/redis/post.cache';
 import { socketIoPostObject} from '@sockets/post.socket';
 import { postQueue } from '@services/queues/post.queue';
+import { imageQueue } from '@services/queues/image.queue';
 import { UploadApiResponse } from 'cloudinary';
 import { uploads } from '@globals/helpers/cloudinaryUpload';
 import { BadRequestError } from '@globals/helpers/errorHandler';
@@ -106,6 +107,11 @@ export class CreatePost {
         } as ISavePostToCache);
 
         postQueue.addPostJob('addPostToDb', { key: req.currentUser!.userId, value: createdPost });
+        imageQueue.addImageJob('addImageToDb', {
+            key: req.currentUser!.userId,
+            imgId: result.public_id,
+            imgVersion: result.version.toString()
+        });
 
         res.status(HTTP_STATUS.CREATED).json({ message: 'Post created successfully!' });
     }

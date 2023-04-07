@@ -8,6 +8,7 @@ import { authMiddleware } from '@globals/helpers/authMiddleware';
 import { commentRoutes } from '@comment/routes/comment.routes';
 import { followerRoutes } from '@follower/routes/follower.routes';
 import { notificationRoutes } from '@notification/routes/notification.routes';
+import { imageRoutes } from '@image/routes/image.routes';
 
 const BASE_PATH = '/api/v1';
 
@@ -23,6 +24,7 @@ export default (app: Application) => {
         app.use(BASE_PATH, authMiddleware.verifyUser, commentRoutes.routes());
         app.use(BASE_PATH, authMiddleware.verifyUser, followerRoutes.routes());
         app.use(BASE_PATH, authMiddleware.verifyUser, notificationRoutes.routes());
+        app.use(BASE_PATH, authMiddleware.verifyUser, imageRoutes.routes());
     };
 
     routes();

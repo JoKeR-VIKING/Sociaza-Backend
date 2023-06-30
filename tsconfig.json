@@ -32,6 +32,7 @@
             "@follower/*": ["./src/features/follower/*"],
             "@notification/*": ["./src/features/notification/*"],
             "@image/*": ["./src/features/images/*"],
+            "@chat/*": ["./src/features/chat/*"],
             "@globals/*": ["./src/shared/globals/*"],
             "@services/*": ["./src/shared/services/*"],
             "@sockets/*": ["./src/shared/sockets/*"],

@@ -19,6 +19,7 @@ import { SocketIOUserHandler } from '@sockets/user';
 import { SocketIOFollowerHandler } from '@sockets/follower';
 import { SocketIONotificationHandler } from '@sockets/notification';
 import { SocketIOImageHandler } from '@sockets/image';
+import { SocketIOChatHandler } from '@sockets/chat';
 
 const SERVER_PORT = 8000;
 const log: Logger = Config.createLogger('server');
@@ -122,12 +123,14 @@ export class SociazaServer {
         const userSocketHandler: SocketIOUserHandler = new SocketIOUserHandler(io);
         const notificationSocketHandler: SocketIONotificationHandler = new SocketIONotificationHandler();
         const imageSocketHandler: SocketIOImageHandler = new SocketIOImageHandler();
+        const chatSocketHandler: SocketIOChatHandler = new SocketIOChatHandler(io);
 
         postSocketHandler.listen();
         followerSocketHandler.listen();
         userSocketHandler.listen();
         notificationSocketHandler.listen(io);
         imageSocketHandler.listen(io);
+        chatSocketHandler.listen();
     };
 
     public start() : void {

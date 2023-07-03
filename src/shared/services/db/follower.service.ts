@@ -9,6 +9,7 @@ import { NotificationModel } from '@notification/models/notification.schema';
 import { socketIoNotificationObject } from '@sockets/notification';
 import { notificationTemplate } from '@services/emails/templates/notifications/notification.template';
 import { emailQueue } from '@services/queues/email.queue';
+import {map} from "lodash";
 
 class FollowerService {
     public async addFollowerToDb(userId: string, followeeId: string, username: string, followerDocumentId: ObjectId): Promise<void> {
@@ -93,7 +94,10 @@ class FollowerService {
         ]);
     }
 
-    public async getFolloweeData(userObjectId: ObjectId): Promise<IFollowerData[]> {
+    public async getFollowerData(userObjectId: ObjectId): Promise<IFollowerData[]> {
+        // console.log(userObjectId);
+        // console.log(await FollowerModel.find({ followerId: userObjectId }));
+
         return await FollowerModel.aggregate([
             { $match: { followerId: userObjectId } },
             { $lookup: { from: 'User', localField: 'followeeId', foreignField: '_id', as: 'followeeId' } },
@@ -124,7 +128,7 @@ class FollowerService {
         ]) as IFollowerData[];
     }
 
-    public async getFollowerData(userObjectId: ObjectId): Promise<IFollowerData[]> {
+    public async getFolloweeData(userObjectId: ObjectId): Promise<IFollowerData[]> {
         return await FollowerModel.aggregate([
             { $match: { followeeId: userObjectId } },
             { $lookup: { from: 'User', localField: 'followerId', foreignField: '_id', as: 'followerId' } },
@@ -153,6 +157,22 @@ class FollowerService {
                 }
             }
         ]) as IFollowerData[];
+    }
+
+    public async getFollowersId(userId: string): Promise<string[]> {
+        const followers = await FollowerModel.aggregate([
+            { $match: { followerId: new mongoose.Types.ObjectId(userId) } },
+            {
+                $project: {
+                    followeeId: 1,
+                    _id: 0
+                }
+            }
+        ]);
+
+        return map(followers, (result) => {
+            return result.followeeId.toString();
+        });
     }
 }
 

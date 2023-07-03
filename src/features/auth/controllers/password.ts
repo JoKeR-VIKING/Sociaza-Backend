@@ -43,7 +43,7 @@ export class Password {
         const { password, confirmPassword } = req.body;
 
         const err: any[] = passwordSchema.validate(password, { details: true }) as any[];
-        console.log(err);
+
         if (err.length > 0)
             throw new BadRequestError(err[0].message);
 

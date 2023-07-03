@@ -31,6 +31,23 @@ withCredentials: true
 
 ###
 
+POST {{ baseUrl }}/{{ urlPath }}/post/video-post
+Content-Type: application/json
+Accept: application/json
+withCredentials: true
+
+{
+    "post": "Test video post",
+    "bgColor": "#000",
+    "privacy": "Private",
+    "feelings": "Happy",
+    "gifUrl": "",
+    "profilePicture": "https://res.cloudinary.com/dslkigtvk/image/upload/v1677396622/63fb0a8cea6213a5ae251143.jpg",
+    "postVideo": "https://res.cloudinary.com/dslkigtvk/video/upload/v1688390237/MyForm_2021-11-02_15-30-43_rcq0t9.mp4"
+}
+
+###
+
 GET {{ baseUrl }}/{{ urlPath }}/post/all/1
 Content-Type: application/json
 Accept: application/json
@@ -39,6 +56,13 @@ withCredentials: true
 ###
 
 GET {{ baseUrl }}/{{ urlPath }}/post/images/1
+Content-Type: application/json
+Accept: application/json
+withCredentials: true
+
+###
+
+GET {{ baseUrl }}/{{ urlPath }}/post/videos/1
 Content-Type: application/json
 Accept: application/json
 withCredentials: true

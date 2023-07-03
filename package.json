@@ -7,7 +7,8 @@
         "build": "ttsc -p .",
         "start": "nodemon .\\build\\app.js | .\\node_modules\\.bin\\bunyan",
         "dev": "nodemon -r tsconfig-paths/register src/app.ts | .\\node_modules\\.bin\\bunyan",
-        "test": "jest --coverage=true -w=1 --forceExit --detectOpenHandles --watchAll=false"
+        "test": "jest --coverage=true -w=1 --forceExit --detectOpenHandles --watchAll=false",
+        "seed:dev": "npx ts-node src/seed.ts"
     },
     "author": "",
     "license": "MIT",
@@ -22,6 +23,7 @@
         "bull": "^4.10.4",
         "bullmq": "^3.10.0",
         "bunyan": "^1.8.15",
+        "canvas": "^2.11.2",
         "cloudinary": "^1.33.0",
         "compression": "^1.7.4",
         "cookie-session": "^2.0.0",
@@ -46,11 +48,13 @@
         "redis": "^4.6.4",
         "socket-io": "^1.0.0",
         "socket.io": "^4.5.4",
+        "ts-node": "^10.9.1",
         "ttypescript": "^1.5.15",
         "typescript": "^4.9.5",
         "typescript-transform-paths": "^3.4.6"
     },
     "devDependencies": {
+        "@faker-js/faker": "^8.0.2",
         "@types/bcryptjs": "^2.4.2",
         "@types/bull": "^4.10.0",
         "@types/bunyan": "^1.8.8",

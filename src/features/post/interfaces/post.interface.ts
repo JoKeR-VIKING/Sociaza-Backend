@@ -14,6 +14,8 @@ export interface IPostDocument extends Document {
     commentsCount: number;
     imgVersion?: string;
     imgId?: string;
+    videoVersion?: string;
+    videoId?: string;
     feelings?: string;
     gifUrl?: string;
     privacy?: string;
@@ -25,6 +27,7 @@ export interface IGetPostsQuery {
     _id?: ObjectId | string;
     username?: string;
     imgId?: string;
+    videoId?: string;
     gifUrl?: string;
 }
 

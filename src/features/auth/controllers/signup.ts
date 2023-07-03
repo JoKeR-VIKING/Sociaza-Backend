@@ -25,7 +25,7 @@ export class SignUp {
     public async create(req: Request, res: Response): Promise<void> {
         const { username, password, email, avatarColor, avatarImage } = req.body;
         const err: any[] = passwordSchema.validate(password, { details: true }) as any[];
-        console.log(err);
+
         if (err.length > 0)
             throw new BadRequestError(err[0].message);
 

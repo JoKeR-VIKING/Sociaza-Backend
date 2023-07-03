@@ -10,13 +10,19 @@ import { followerRoutes } from '@follower/routes/follower.routes';
 import { notificationRoutes } from '@notification/routes/notification.routes';
 import { imageRoutes } from '@image/routes/image.routes';
 import { chatRoutes } from '@chat/routes/chat.routes';
-import {userRoutes} from "@user/routes/user.routes";
+import { userRoutes } from '@user/routes/user.routes';
+import { healthRoutes } from '@user/routes/health';
 
 const BASE_PATH = '/api/v1';
 
 export default (app: Application) => {
     const routes = () => {
         app.use('/queues', serverAdapter.getRouter());
+        app.use('/app', healthRoutes.health());
+        app.use('/app', healthRoutes.env());
+        app.use('/app', healthRoutes.instance());
+        app.use('/app', healthRoutes.fibo());
+
         app.use(BASE_PATH, authRoutes.routes());
         app.use(BASE_PATH, authMiddleware.verifyUser, authRoutes.signoutRoute());
 

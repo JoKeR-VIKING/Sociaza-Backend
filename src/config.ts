@@ -1,6 +1,7 @@
 import dotenv from 'dotenv';
 import bunyan from 'bunyan';
 import cloudinary from 'cloudinary';
+import process from "process";
 
 dotenv.config({});
 export class Config {
@@ -18,6 +19,7 @@ export class Config {
     public static SENDER_PASSWORD: string | undefined;
     public static SENDGRID_API_KEY: string | undefined;
     public static SENDGRID_SENDER: string | undefined;
+    public static EC2_URL: string | undefined;
 
     constructor() {
         Config.DATABASE_URL = process.env.DATABASE_URL || 'mongodb://127.0.0.1:27017/sociaza-backend';
@@ -34,6 +36,7 @@ export class Config {
         Config.SENDER_PASSWORD = process.env.SENDER_PASSWORD || '';
         Config.SENDGRID_API_KEY = process.env.SENDGRID_API_KEY || '';
         Config.SENDGRID_SENDER = process.env.SENDGRID_SENDER || '';
+        Config.EC2_URL = process.env.EC2_URL || '';
     }
 
     public static createLogger(name: string): bunyan {

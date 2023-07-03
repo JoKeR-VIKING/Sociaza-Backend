@@ -81,6 +81,10 @@ export class SociazaServer {
     };
 
     private async startServer(app: Application): Promise<void> {
+        if (!Config.JWT_TOKEN) {
+            throw new Error('JWT token must be provided');
+        }
+
         try {
             const httpServer: http.Server = new http.Server(app);
             const socketIO: Server = await this.createSocketIO(httpServer);
@@ -112,6 +116,7 @@ export class SociazaServer {
     };
 
     private startHttpServer(httpServer: http.Server): void {
+        log.info(`Worker with process id of ${process.pid} has started`);
         httpServer.listen(SERVER_PORT, () => {
             log.info(`Server running on port ${SERVER_PORT}`);
         })

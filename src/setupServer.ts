@@ -20,6 +20,7 @@ import { SocketIOFollowerHandler } from '@sockets/follower';
 import { SocketIONotificationHandler } from '@sockets/notification';
 import { SocketIOImageHandler } from '@sockets/image';
 import { SocketIOChatHandler } from '@sockets/chat';
+import apiStats from 'swagger-stats';
 
 const SERVER_PORT = 8000;
 const log: Logger = Config.createLogger('server');
@@ -63,6 +64,12 @@ export class SociazaServer {
     private routeMiddleware(app: Application): void {
         applicationRoutes(app);
     };
+
+    private apiMonitoring(app: Application): void {
+        app.use(apiStats.getMiddleware({
+            uriPath: '/api-monitoring'
+        }));
+    }
 
     private globalErrorMiddleware(app: Application): void {
         app.all('*', (req: Request, res: Response) => {
@@ -142,6 +149,7 @@ export class SociazaServer {
         this.securityMiddleware(this.app);
         this.standardMiddleware(this.app);
         this.routeMiddleware(this.app);
+        this.apiMonitoring(this.app);
         this.globalErrorMiddleware(this.app);
         this.startServer(this.app);
     };

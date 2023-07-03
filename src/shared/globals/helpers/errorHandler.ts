@@ -17,7 +17,7 @@ export abstract class CustomError extends Error {
     abstract code: number;
     abstract status: string;
 
-    constructor(message: string) {
+    protected constructor(message: string) {
         super(message);
     }
 
@@ -59,6 +59,24 @@ export class FileTooLargeError extends CustomError {
 
 export class JoiRequestValidationError extends CustomError {
     code = HTTP_STATUS.BAD_REQUEST;
+    status = "Error";
+
+    constructor(message: string) {
+        super(message);
+    }
+}
+
+export class ServerError extends CustomError {
+    code = HTTP_STATUS.SERVICE_UNAVAILABLE;
+    status = "Error";
+
+    constructor(message: string) {
+        super(message);
+    }
+}
+
+export class NotAuthorizedError extends CustomError {
+    code = HTTP_STATUS.UNAUTHORIZED;
     status = "Error";
 
     constructor(message: string) {

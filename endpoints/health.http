@@ -1,0 +1,25 @@
+GET {{ baseUrl }}/app/health
+Content-Type: application/json
+Accept: application/json
+withCredentials: true
+
+###
+
+GET {{ baseUrl }}/app/env
+Content-Type: application/json
+Accept: application/json
+withCredentials: true
+
+###
+
+GET {{ baseUrl }}/app/instance
+Content-Type: application/json
+Accept: application/json
+withCredentials: true
+
+###
+
+GET {{ baseUrl }}/app/fibo/5
+Content-Type: application/json
+Accept: application/json
+withCredentials: true

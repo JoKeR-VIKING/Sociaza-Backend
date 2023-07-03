@@ -1,0 +1,61 @@
+POST {{ baseUrl }}/{{ urlPath }}/reaction
+Content-Type: application/json
+Accept: application/json
+withCredentials: true
+
+{
+    "userTo": "6401d80583eedaf5eb6d20e9",
+    "postId": "6419de6e6fa0f6657a8f5ac1",
+    "type": "love",
+    "profilePicture": "https://res.cloudinary.com/dslkigtvk/image/upload/v1677396622/63fb0a8cea6213a5ae251143.jpg",
+    "previousReaction": "",
+    "postReaction": { "like": 0, "love": 1, "haha": 0, "sad": 0, "wow": 0, "angry": 0 }
+}
+
+###
+
+POST {{ baseUrl }}/{{ urlPath }}/reaction
+Content-Type: application/json
+Accept: application/json
+withCredentials: true
+
+{
+    "userTo": "6401d80583eedaf5eb6d20e9",
+    "postId": "6419de6e6fa0f6657a8f5ac1",
+    "type": "wow",
+    "profilePicture": "https://res.cloudinary.com/dslkigtvk/image/upload/v1677396622/63fb0a8cea6213a5ae251143.jpg",
+    "previousReaction": "love",
+    "postReaction": { "like": 0, "love": 0, "haha": 0, "sad": 0, "wow": 1, "angry": 0 }
+}
+
+###
+
+DELETE {{ baseUrl }}/{{ urlPath }}/reaction/64115eff0b0724ace791afdd/wow
+Content-Type: application/json
+Accept: application/json
+withCredentials: true
+
+{
+    "postReaction": { "like": 0, "love": 0, "haha": 0, "sad": 0, "wow": 0, "angry": 0 }
+}
+
+###
+
+GET {{ baseUrl }}/{{ urlPath }}/reaction/post/64115eff0b0724ace791afdd
+Content-Type: application/json
+Accept: application/json
+withCredentials: true
+
+###
+
+GET {{ baseUrl }}/{{ urlPath }}/reaction/username/Pratham
+Content-Type: application/json
+Accept: application/json
+withCredentials: true
+
+###
+
+GET {{ baseUrl }}/{{ urlPath }}/reaction/6419de6e6fa0f6657a8f5ac1/Pratham
+Content-Type: application/json
+Accept: application/json
+withCredentials: true

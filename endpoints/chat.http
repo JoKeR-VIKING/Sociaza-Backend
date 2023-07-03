@@ -1,0 +1,76 @@
+POST {{ baseUrl }}/{{ urlPath }}/chat/message
+Content-Type: application/json
+Accept: application/json
+withCredentials: true
+
+{
+    "conversationId": "649f0c9afaf61e5f2767f9b5",
+    "receiverId": "6421270ee3372d84b9f48835",
+    "receiverUsername": "Divya",
+    "receiverAvatarColor": "red",
+    "receiverProfilePicture": "https://res.cloudinary.com/dslkigtvk/image/upload/v1679894288/6421270ee3372d84b9f48835",
+    "body": "Hello!",
+    "gifUrl": "",
+    "isRead": false,
+    "selectedImage": ""
+}
+
+###
+
+POST {{ baseUrl }}/{{ urlPath }}/chat/message/add-chat-users
+Content-Type: application/json
+Accept: application/json
+withCredentials: true
+
+{
+    "userOne": "6421270ee3372d84b9f48835",
+    "userTwo": "642126e0e3372d84b9f4882e"
+}
+
+###
+
+GET {{ baseUrl }}/{{ urlPath }}/chat/message/conversation-list
+Content-Type: application/json
+Accept: application/json
+withCredentials: true
+
+###
+
+GET {{ baseUrl }}/{{ urlPath }}/chat/message/user/6421270ee3372d84b9f48835
+Content-Type: application/json
+Accept: application/json
+withCredentials: true
+
+###
+
+DELETE {{ baseUrl }}/{{ urlPath }}/chat/message/delete/649bf4d4e2c7deec0908af57/642126e0e3372d84b9f4882e/6421270ee3372d84b9f48835/deleteForMe
+Content-Type: application/json
+Accept: application/json
+withCredentials: true
+
+###
+
+PUT {{ baseUrl }}/{{ urlPath }}/chat/message/update
+Content-Type: application/json
+Accept: application/json
+withCredentials: true
+
+{
+    "senderId": "642126e0e3372d84b9f4882e",
+    "receiverId": "6421270ee3372d84b9f48835"
+}
+
+###
+
+PUT {{ baseUrl }}/{{ urlPath }}/chat/message/reaction
+Content-Type: application/json
+Accept: application/json
+withCredentials: true
+
+{
+    "conversationId": "649f0c9afaf61e5f2767f9b5",
+    "messageId": "649f0c9afaf61e5f2767f9b4",
+    "reaction": "love",
+    "type": "add"
+}
+

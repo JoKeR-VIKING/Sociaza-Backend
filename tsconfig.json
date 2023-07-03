@@ -5,7 +5,7 @@
         "lib": ["DOM", "ES2022"],
         "baseUrl": ".",
         "outDir": "./build",
-        "rootDir": "src",
+        "rootDir": ".",
         "strict": true,
         "noImplicitAny": true,
         "noUnusedLocals": false,
@@ -18,6 +18,26 @@
         "forceConsistentCasingInFileNames": true,
         "allowSyntheticDefaultImports": true,
         "pretty": true,
-        "resolveJsonModule": true
+        "resolveJsonModule": true,
+        "plugins": [
+            {"transform": "typescript-transform-paths"},
+            {"transform": "typescript-transform-paths", "afterDeclarations": true}
+        ],
+        "paths": {
+            "@auth/*": ["./src/features/auth/*"],
+            "@user/*": ["./src/features/user/*"],
+            "@post/*": ["./src/features/post/*"],
+            "@reaction/*": ["./src/features/reaction/*"],
+            "@comment/*": ["./src/features/comment/*"],
+            "@follower/*": ["./src/features/follower/*"],
+            "@notification/*": ["./src/features/notification/*"],
+            "@image/*": ["./src/features/images/*"],
+            "@chat/*": ["./src/features/chat/*"],
+            "@globals/*": ["./src/shared/globals/*"],
+            "@services/*": ["./src/shared/services/*"],
+            "@sockets/*": ["./src/shared/sockets/*"],
+            "@workers/*": ["./src/shared/workers/*"],
+            "@root/*": ["./src/*"]
+        }
     }
 }

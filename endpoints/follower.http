@@ -1,0 +1,39 @@
+PUT {{ baseUrl }}/{{ urlPath }}/user/follow/642126e0e3372d84b9f4882e
+Content-Type: application/json
+Accept: application/json
+withCredentials: true
+
+###
+
+PUT {{ baseUrl }}/{{ urlPath }}/user/unfollow/641c519dd772628aa59b05ac/6401d80583eedaf5eb6d20e9
+Content-Type: application/json
+Accept: application/json
+withCredentials: true
+
+###
+
+GET {{ baseUrl }}/{{ urlPath }}/user/following
+Content-Type: application/json
+Accept: application/json
+withCredentials: true
+
+###
+
+GET {{ baseUrl }}/{{ urlPath }}/user/followers/642126e0e3372d84b9f4882e
+Content-Type: application/json
+Accept: application/json
+withCredentials: true
+
+###
+
+PUT {{ baseUrl }}/{{ urlPath }}/user/block/6420348d800f6d3d0bc48b77
+Content-Type: application/json
+Accept: application/json
+withCredentials: true
+
+###
+
+PUT {{ baseUrl }}/{{ urlPath }}/user/unblock/6420348d800f6d3d0bc48b77
+Content-Type: application/json
+Accept: application/json
+withCredentials: true

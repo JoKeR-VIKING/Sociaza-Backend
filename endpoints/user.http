@@ -1,0 +1,94 @@
+GET {{ baseUrl }}/{{ urlPath }}/user/all/1
+Content-Type: application/json
+Accept: application/json
+withCredentials: true
+
+###
+
+GET {{ baseUrl }}/{{ urlPath }}/user/profile
+Content-Type: application/json
+Accept: application/json
+withCredentials: true
+
+###
+
+GET {{ baseUrl }}/{{ urlPath }}/user/profile/id/6421270ee3372d84b9f48835
+Content-Type: application/json
+Accept: application/json
+withCredentials: true
+
+###
+
+GET {{ baseUrl }}/{{ urlPath }}/user/profile/posts/divya/6421270ee3372d84b9f48835/626318701929
+Content-Type: application/json
+Accept: application/json
+withCredentials: true
+
+###
+
+GET {{ baseUrl }}/{{ urlPath }}/user/profile/suggestions
+Content-Type: application/json
+Accept: application/json
+withCredentials: true
+
+###
+
+GET {{ baseUrl }}/{{ urlPath }}/user/profile/search/i
+Content-Type: application/json
+Accept: application/json
+withCredentials: true
+
+###
+
+PUT {{ baseUrl }}/{{ urlPath }}/user/profile/change-password
+Content-Type: application/json
+Accept: application/json
+withCredentials: true
+
+{
+    "currentPassword": "Pratham@123",
+    "newPassword": "Pratham@1234",
+    "confirmPassword": "Pratham@1234"
+}
+
+###
+
+PUT {{ baseUrl }}/{{ urlPath }}/user/profile/update/info
+Content-Type: application/json
+Accept: application/json
+withCredentials: true
+
+{
+    "quote": "Code",
+    "work": "Programmer",
+    "school": "",
+    "location": "Mumbai"
+}
+
+###
+
+PUT {{ baseUrl }}/{{ urlPath }}/user/profile/update/social
+Content-Type: application/json
+Accept: application/json
+withCredentials: true
+
+{
+    "facebook": "",
+    "instagram": "",
+    "twitter": "",
+    "youtube": "https://youtube.com"
+}
+
+###
+
+PUT {{ baseUrl }}/{{ urlPath }}/user/profile/update/notification
+Content-Type: application/json
+Accept: application/json
+withCredentials: true
+
+{
+    "messages": true,
+    "reactions": false,
+    "comments": true,
+    "follows": true
+}

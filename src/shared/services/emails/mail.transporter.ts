@@ -12,8 +12,9 @@ interface IMailOptions {
     html: string;
 }
 
+Config.validateConfig();
 const log: Logger = Config.createLogger('mail');
-sendGridMail.setApiKey(Config.SENDGRID_API_KEY!);
+sendGridMail.setApiKey(Config.SENDGRID_API_KEY as string);
 
 class MailTransport {
     public async sendEmail(receiverEmail: string, subject: string, body: string): Promise<void> {
@@ -55,7 +56,7 @@ class MailTransport {
 
     private async productionEmailSender (receiverEmail: string, subject: string, body: string): Promise<void> {
         const mailOptions: IMailOptions = {
-            from: `Sociaza <${Config.SENDER_EMAIL}>`,
+            from: `Sociaza <${Config.SENDGRID_SENDER}>`,
             to: receiverEmail,
             subject: subject,
             html: body,

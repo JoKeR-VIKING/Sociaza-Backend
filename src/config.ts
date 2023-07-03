@@ -11,6 +11,7 @@ export class Config {
     public static SECRET_KEY_ONE: string | undefined;
     public static SECRET_KEY_TWO: string | undefined;
     public static CLIENT_URL: string | undefined;
+    public static REDIS_PASSWORD: string | undefined;
     public static REDIS_HOST: string | undefined;
     public static CLOUD_NAME: string | undefined;
     public static CLOUD_API_KEY: string | undefined;
@@ -28,6 +29,7 @@ export class Config {
         Config.SECRET_KEY_ONE = process.env.NODE_ENV || '';
         Config.SECRET_KEY_TWO = process.env.NODE_ENV || '';
         Config.CLIENT_URL = process.env.CLIENT_URL || '';
+        Config.REDIS_PASSWORD = process.env.REDIS_PASSWORD || '';
         Config.REDIS_HOST = process.env.REDIS_HOST || '';
         Config.CLOUD_NAME = process.env.CLOUD_NAME || '';
         Config.CLOUD_API_KEY = process.env.CLOUD_API_KEY || '';

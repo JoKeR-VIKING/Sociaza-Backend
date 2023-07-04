@@ -17,6 +17,8 @@ import { notificationTemplate } from '@services/emails/templates/notifications/n
 import { emailQueue } from '@services/queues/email.queue';
 import { MessageCache } from '@services/redis/message.cache';
 import {chatQueue} from "@services/queues/chat.queue";
+import {chatService} from "@services/db/chat.service";
+import {mailTransport} from "@services/emails/mail.transporter";
 
 const userCache: UserCache = new UserCache();
 const messageCache: MessageCache = new MessageCache();
@@ -76,7 +78,13 @@ export class AddChatMessages {
         await messageCache.addChatListToCache(`${req.currentUser!.userId}`, `${receiverId}`, `${conversationObjectId}`);
         await messageCache.addChatListToCache(`${receiverId}`, `${req.currentUser!.userId}`, `${conversationObjectId}`);
         await messageCache.addChatMessageToCache(`${conversationObjectId}`, messageData);
-        chatQueue.addChatJob('addChatMessageToDb', messageData);
+
+        if (Config.NODE_ENV === 'development') {
+            chatQueue.addChatJob('addChatMessageToDb', messageData);
+        }
+        else {
+            await chatService.addMessageToDb(messageData);
+        }
 
         res.status(HTTP_STATUS.OK).json({ message: 'Message added', conversationId: conversationObjectId });
     }
@@ -114,6 +122,12 @@ export class AddChatMessages {
         };
 
         const template: string = notificationTemplate.template(templateParams);
-        emailQueue.addEmailJob('directMessageEmail', { receiverEmail: cachedUser.email!, template, subject: `You have received messages from ${currentUser.username}` });
+
+        if (Config.NODE_ENV === 'development') {
+            emailQueue.addEmailJob('directMessageEmail', { receiverEmail: cachedUser.email!, template, subject: `You have received messages from ${currentUser.username}` });
+        }
+        else {
+            await mailTransport.sendEmail(cachedUser.email!, `You have received messages from ${currentUser.username}`, template);
+        }
     }
 }

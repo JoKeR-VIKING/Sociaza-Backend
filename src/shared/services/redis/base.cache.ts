@@ -10,11 +10,7 @@ export abstract class BaseCache {
 
     constructor(cacheName: string) {
         this.client = createClient({
-            password: Config.REDIS_PASSWORD,
-            socket: {
-                host: Config.REDIS_HOST,
-                port: 11874
-            }
+            url: Config.REDIS_HOST
         });
         this.log = Config.createLogger(cacheName);
         this.cacheError();

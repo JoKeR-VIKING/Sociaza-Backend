@@ -25,6 +25,7 @@ export class CommentCache extends BaseCache {
             const count = Helpers.parseJson(commentsCount[0]) as number + 1;
 
             await this.client.HSET(`post:${postId}`, 'commentsCount', `${count}`);
+            await this.client.disconnect();
         }
         catch (err) {
             log.error(err);
@@ -44,6 +45,7 @@ export class CommentCache extends BaseCache {
                 comments.push(Helpers.parseJson(reply));
             }
 
+            await this.client.disconnect();
             return comments;
         }
         catch (err) {
@@ -65,6 +67,7 @@ export class CommentCache extends BaseCache {
                 names.push(Helpers.parseJson(comment).username);
             }
 
+            await this.client.disconnect();
             return [{
                 count: commentsCount,
                 names: names
@@ -88,6 +91,7 @@ export class CommentCache extends BaseCache {
                     return [Helpers.parseJson(comment) as ICommentDocument];
             }
 
+            await this.client.disconnect();
             return [];
         }
         catch (err) {

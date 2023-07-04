@@ -80,7 +80,7 @@ class ChatService {
         ]);
     }
 
-    public async markMessageAsDeletedInDb(messageId: string, type: string): Promise<void> {
+    public async markMessageAsDeletedInDb(messageId: ObjectId, type: string): Promise<void> {
         if (type === 'deleteForMe')
             await MessageModel.updateOne({ _id: messageId }, { $set: { deleteForMe: true } }).exec();
         else
@@ -101,7 +101,7 @@ class ChatService {
         await MessageModel.updateMany(query, { $set: { isRead: true } }).exec();
     }
 
-    public async updateMessageReactionInDb(messageId: ObjectId, senderName: ObjectId, reaction: string, type: 'add' | 'remove'): Promise<void> {
+    public async updateMessageReactionInDb(messageId: ObjectId, senderName: string, reaction: string, type: 'add' | 'remove'): Promise<void> {
         if (type === 'add') {
             await MessageModel.updateOne({ _id: messageId }, { $set: { reaction: { senderName, type: reaction } } }).exec();
         }

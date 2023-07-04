@@ -8,6 +8,7 @@ import { IChatUsers, IMessageData, IMessageNotification } from '@chat/interfaces
 import { socketIOChatObject } from '@sockets/chat';
 import { MessageCache } from '@services/redis/message.cache';
 import { chatQueue } from '@services/queues/chat.queue';
+import {chatService} from "@services/db/chat.service";
 
 const messageCache: MessageCache = new MessageCache();
 
@@ -18,12 +19,17 @@ export class AddReaction {
         const updatedMessage: IMessageData = await messageCache.updateMessageReaction(`${conversationId}`, `${messageId}`, `${reaction}`, `${req.currentUser!.username}`, type);
         socketIOChatObject.emit('message reaction', updatedMessage);
 
-        chatQueue.addChatJob('updateReactionInDb', {
-            messageId: new mongoose.Types.ObjectId(messageId),
-            senderName: req.currentUser!.username,
-            reaction: reaction,
-            type: type
-        });
+        if (Config.NODE_ENV === 'development') {
+            chatQueue.addChatJob('updateReactionInDb', {
+                messageId: new mongoose.Types.ObjectId(messageId),
+                senderName: req.currentUser!.username,
+                reaction: reaction,
+                type: type
+            });
+        }
+        else {
+            await chatService.updateMessageReactionInDb(new mongoose.Types.ObjectId(messageId), req.currentUser!.username, reaction, type);
+        }
 
         res.status(HTTP_STATUS.OK).json({ message: 'Message reaction added' });
     }

@@ -10,6 +10,9 @@ import { socketIoPostObject } from '@sockets/post.socket';
 import { UploadApiResponse } from 'cloudinary';
 import {uploads, videoUpload} from '@globals/helpers/cloudinaryUpload';
 import { BadRequestError } from '@globals/helpers/errorHandler';
+import {Config} from "@root/config";
+import {postService} from "@services/db/post.service";
+import {imageService} from "@services/db/image.service";
 
 
 const postCache: PostCache = new PostCache();
@@ -34,7 +37,14 @@ export class UpdatePost {
 
         const cachePost: IPostDocument = await postCache.updatePostInCache(postId, updatedPost);
         socketIoPostObject.emit('update post', cachePost, 'posts');
-        postQueue.addPostJob('updatePostFromDb', { key: postId, value: cachePost });
+
+        if (Config.NODE_ENV === 'development') {
+            postQueue.addPostJob('updatePostFromDb', { key: postId, value: cachePost });
+        }
+        else {
+            await postService.updatePost(postId, cachePost);
+        }
+
         res.status(HTTP_STATUS.OK).json({ message: 'Post updated successfully' });
     }
 
@@ -93,14 +103,25 @@ export class UpdatePost {
 
         const cachePost: IPostDocument = await postCache.updatePostInCache(postId, updatedPost);
         socketIoPostObject.emit('update post', cachePost, 'posts');
-        postQueue.addPostJob('updatePostFromDb', { key: postId, value: cachePost });
+
+        if (Config.NODE_ENV === 'development') {
+            postQueue.addPostJob('updatePostFromDb', { key: postId, value: cachePost });
+        }
+        else {
+            await postService.updatePost(postId, cachePost);
+        }
 
         if (postImage) {
-            imageQueue.addImageJob('addImageToDb', {
-                key: req.currentUser!.userId,
-                imgId: result.public_id,
-                imgVersion: result.version.toString()
-            });
+            if (Config.NODE_ENV === 'development') {
+                imageQueue.addImageJob('addImageToDb', {
+                    key: req.currentUser!.userId,
+                    imgId: result.public_id,
+                    imgVersion: result.version.toString()
+                });
+            }
+            else {
+                await imageService.addImage(req.currentUser!.userId, result.public_id, result.version.toString(), '');
+            }
         }
 
         return result;
@@ -124,6 +145,12 @@ export class UpdatePost {
 
         const cachePost: IPostDocument = await postCache.updatePostInCache(postId, updatedPost);
         socketIoPostObject.emit('update post', cachePost, 'posts');
-        postQueue.addPostJob('updatePostFromDb', { key: postId, value: cachePost });
+
+        if (Config.NODE_ENV === 'development') {
+            postQueue.addPostJob('updatePostFromDb', { key: postId, value: cachePost });
+        }
+        else {
+            await postService.updatePost(postId, cachePost);
+        }
     }
 }

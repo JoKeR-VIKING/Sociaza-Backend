@@ -27,6 +27,8 @@ export class ReactionCache extends BaseCache {
                 await this.client.LPUSH(`reaction:${key}`, JSON.stringify(reaction));
                 await this.client.HSET(`post:${key}`, 'reactions', JSON.stringify(postReactions));
             }
+
+            await this.client.disconnect();
         }
         catch (err) {
             log.error(err);
@@ -48,6 +50,7 @@ export class ReactionCache extends BaseCache {
 
             const dataToSave: string[] = ['reactions', JSON.stringify(postReactions)]
             await this.client.HSET(`post:${key}`, dataToSave);
+            await this.client.disconnect();
         }
         catch (err) {
             log.error(err);
@@ -68,6 +71,7 @@ export class ReactionCache extends BaseCache {
                 list.push(Helpers.parseJson(item));
             }
 
+            await this.client.disconnect();
             return response.length ? [list, reactionCount] : [[], 0];
         }
         catch (err) {
@@ -92,6 +96,7 @@ export class ReactionCache extends BaseCache {
                 return listItem.postId === postId && listItem.username === username;
             }) as IReactionDocument;
 
+            await this.client.disconnect();
             return result ? [result, 1] : [];
         }
         catch (err) {

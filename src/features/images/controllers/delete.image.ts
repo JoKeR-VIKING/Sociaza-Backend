@@ -18,9 +18,14 @@ export class DeleteImage {
 
         socketIoImageObject.emit('delete image', imageId);
 
-        imageQueue.addImageJob('removeImageFromDb', {
-            imageId: imageId
-        });
+        if (Config.NODE_ENV === 'development') {
+            imageQueue.addImageJob('removeImageFromDb', {
+                imageId: imageId
+            });
+        }
+        else {
+            await imageService.removeImage(imageId);
+        }
 
         res.status(HTTP_STATUS.OK).json({ message: 'Image deleted successfully.' });
     }
@@ -44,15 +49,21 @@ export class DeleteImage {
 
         await Promise.all([bgImageId, bgImageVersion]);
 
-        imageQueue.addImageJob('removeImageFromDb', {
-            imageId: image._id
-        });
+        if (Config.NODE_ENV === 'development') {
+            imageQueue.addImageJob('removeImageFromDb', {
+                imageId: image._id
+            });
 
-        imageQueue.addImageJob('updateBackgroundImageInDb', {
-            key: req.currentUser!.userId,
-            imgId: '',
-            imgVersion: ''
-        });
+            imageQueue.addImageJob('updateBackgroundImageInDb', {
+                key: req.currentUser!.userId,
+                imgId: '',
+                imgVersion: ''
+            });
+        }
+        else {
+            await imageService.removeImage(image._id);
+            await imageService.updateBackgroundImageToDb(req.currentUser!.userId, '', '');
+        }
 
         res.status(HTTP_STATUS.OK).json({ message: 'Image deleted successfully.' });
     }

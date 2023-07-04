@@ -1,4 +1,4 @@
-POST https://sociaza.onrender.com/api/v1/signup
+POST {{ baseUrl }}/{{ urlPath }}/signup
 Content-Type: application/json
 Accept: application/json
 withCredentials: true

@@ -6,6 +6,8 @@ import { joiValidation } from '@globals/decorators/joiValidationDecorators';
 import { addCommentSchema } from '@comment/schemes/comment.scheme';
 import { ICommentDocument, ICommentJob } from '@comment/interfaces/comment.interface';
 import { commentQueue } from '@services/queues/comment.queue';
+import {commentService} from "@services/db/comment.service";
+import { Config } from '@root/config';
 
 const commentCache: CommentCache = new CommentCache();
 
@@ -33,7 +35,12 @@ export class AddComment {
             comment: commentObject,
         };
 
-        commentQueue.addCommentJob('addCommentToDb', databaseCommentData);
+        if (Config.NODE_ENV === 'development') {
+            commentQueue.addCommentJob('addCommentToDb', databaseCommentData);
+        }
+        else {
+            commentService.addCommentToDb(databaseCommentData);
+        }
 
         res.status(HTTP_STATUS.OK).json({ message: 'Comment added successfully.' });
     }

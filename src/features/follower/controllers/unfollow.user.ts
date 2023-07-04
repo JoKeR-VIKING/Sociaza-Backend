@@ -4,6 +4,8 @@ import { FollowerCache } from '@services/redis/follower.cache';
 import { IFollowerData } from '@follower/interfaces/follower.interface';
 import { followerQueue } from '@services/queues/follower.queue';
 import mongoose from 'mongoose';
+import {followerService} from "@services/db/follower.service";
+import {Config} from "@root/config";
 
 const followerCache: FollowerCache = new FollowerCache();
 
@@ -19,10 +21,15 @@ export class UnfollowUser {
 
         await Promise.all([removeFollowerFromCache, removeFollowingFromCache, followersCount, followingCount]);
 
-        followerQueue.addFollowerJob('removeFollowerFromDb', {
-            keyOne: `${followeeId}`,
-            keyTwo: `${req.currentUser!.userId}`
-        });
+        if (Config.NODE_ENV === 'development') {
+            followerQueue.addFollowerJob('removeFollowerFromDb', {
+                keyOne: `${followeeId}`,
+                keyTwo: `${req.currentUser!.userId}`
+            });
+        }
+        else {
+            await followerService.removeFollowerFromDb(`${followeeId}`, `${req.currentUser!.userId}`);
+        }
 
         res.status(HTTP_STATUS.OK).json({ message: 'Unfollowed user now' });
     }

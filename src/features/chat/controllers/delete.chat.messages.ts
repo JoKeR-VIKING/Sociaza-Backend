@@ -8,6 +8,7 @@ import { IChatUsers, IMessageData, IMessageNotification } from '@chat/interfaces
 import { socketIOChatObject } from '@sockets/chat';
 import { MessageCache } from '@services/redis/message.cache';
 import { chatQueue } from '@services/queues/chat.queue';
+import {chatService} from "@services/db/chat.service";
 
 const messageCache: MessageCache = new MessageCache();
 
@@ -19,10 +20,15 @@ export class DeleteChatMessages {
         socketIOChatObject.emit('message read', updatedMessage);
         socketIOChatObject.emit('chat list', updatedMessage);
 
-        chatQueue.addChatJob('markMessageAsDeletedInDb', {
-            messageId: new mongoose.Types.ObjectId(messageId),
-            type: type
-        });
+        if (Config.NODE_ENV === 'development') {
+            chatQueue.addChatJob('markMessageAsDeletedInDb', {
+                messageId: new mongoose.Types.ObjectId(messageId),
+                type: type
+            });
+        }
+        else {
+            await chatService.markMessageAsDeletedInDb(new mongoose.Types.ObjectId(messageId), type);
+        }
 
         res.status(HTTP_STATUS.OK).json({ message: 'Message deleted' });
     }

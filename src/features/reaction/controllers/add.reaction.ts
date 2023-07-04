@@ -6,6 +6,8 @@ import { joiValidation } from '@globals/decorators/joiValidationDecorators';
 import { addReactionSchema } from '@reaction/schemes/reaction.scheme';
 import { IReactionDocument, IReactionJob } from '@reaction/interfaces/reaction.interface';
 import { reactionQueue } from '@services/queues/reaction.queue';
+import {Config} from "@root/config";
+import {reactionService} from "@services/db/reaction.service";
 
 const reactionCache: ReactionCache = new ReactionCache();
 
@@ -34,7 +36,12 @@ export class AddReaction {
             reactionObject: reactionObject
         };
 
-        reactionQueue.addReactionJob('addReactionToDb', databaseReactionData);
+        if (Config.NODE_ENV === 'development') {
+            reactionQueue.addReactionJob('addReactionToDb', databaseReactionData);
+        }
+        else {
+            await reactionService.addReactionToDb(databaseReactionData);
+        }
 
         res.status(HTTP_STATUS.OK).json({ message: 'Reaction added successfully.' });
     }

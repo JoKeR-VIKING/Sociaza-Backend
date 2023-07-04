@@ -99,6 +99,7 @@ export class PostCache extends BaseCache {
             const count: number = parseInt(postCount[0], 10) + 1;
             multi.HSET(`users:${currentUserId}`, 'postsCount', count);
             multi.exec();
+            await this.client.disconnect();
         }
         catch (err) {
             log.error(err);
@@ -129,6 +130,7 @@ export class PostCache extends BaseCache {
                 posts.push(post);
             }
 
+            await this.client.disconnect();
             return posts;
         }
         catch (err) {
@@ -163,6 +165,7 @@ export class PostCache extends BaseCache {
                 postsWithImage.push(post);
             }
 
+            await this.client.disconnect();
             return postsWithImage;
         }
         catch (err) {
@@ -197,6 +200,7 @@ export class PostCache extends BaseCache {
                 postsWithVideo.push(post);
             }
 
+            await this.client.disconnect();
             return postsWithVideo;
         }
         catch (err) {
@@ -228,6 +232,7 @@ export class PostCache extends BaseCache {
                 userPosts.push(post);
             }
 
+            await this.client.disconnect();
             return userPosts;
         }
         catch (err) {
@@ -241,6 +246,7 @@ export class PostCache extends BaseCache {
             if (!this.client.isOpen)
                 await this.client.connect();
 
+            await this.client.disconnect();
             return await this.client.ZCARD('post');
         }
         catch (err) {
@@ -254,6 +260,7 @@ export class PostCache extends BaseCache {
             if (!this.client.isOpen)
                 await this.client.connect();
 
+            await this.client.disconnect();
             return await this.client.ZCOUNT('post', uId, uId);
         }
         catch (err) {
@@ -283,6 +290,7 @@ export class PostCache extends BaseCache {
             multi.HSET(`users:${currentUserId}`, 'postsCount', count);
 
             await multi.exec();
+            await this.client.disconnect();
         }
         catch (err) {
             log.error(err);
@@ -329,6 +337,7 @@ export class PostCache extends BaseCache {
             postReply[0].reactions = Helpers.parseJson(`${postReply[0].reactions}`) as IReactions;
             postReply[0].createdAt = Helpers.parseJson(`${postReply[0].createdAt}`) as Date;
 
+            await this.client.disconnect();
             return postReply[0];
         }
         catch (err) {

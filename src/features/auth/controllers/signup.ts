@@ -17,6 +17,7 @@ import { authQueue } from '@services/queues/auth.queue';
 import { userQueue } from '@services/queues/user.queue';
 import { valid } from 'joi';
 import JWT from 'jsonwebtoken';
+import {userService} from "@services/db/user.service";
 
 const userCache: UserCache = new UserCache();
 
@@ -52,13 +53,20 @@ export class SignUp {
             throw new BadRequestError(result.message);
         }
 
-        const userDataForCache: IUserDocument = SignUp.prototype.userData(authData, userObjectId);
+        const userDataForCache: IUserDocument = await SignUp.prototype.userData(authData, userObjectId);
         userDataForCache.profilePicture = `https://res.cloudinary.com/${Config.CLOUD_NAME}/image/upload/v${result.version}/${userObjectId}`;
         await userCache.saveUserToCache(`${userObjectId}`, uId, userDataForCache);
 
         omit(userDataForCache, ['uId', 'username', 'email', 'avatarColor', 'password']);
-        authQueue.addAuthUserJob('addUserAuthToDB', { value: authData });
-        userQueue.addUserJob('addUserToDB', { value: userDataForCache });
+
+        if (Config.NODE_ENV === 'development') {
+            await authQueue.addAuthUserJob('addUserAuthToDB', { value: authData });
+            await userQueue.addUserJob('addUserToDB', { value: userDataForCache });
+        }
+        else {
+            await authService.createAuthUser(authData);
+            await userService.createUser(userDataForCache);
+        }
 
         const userJwt: string = SignUp.prototype.signUpToken(authData, userObjectId);
         req.session = { jwt: userJwt };

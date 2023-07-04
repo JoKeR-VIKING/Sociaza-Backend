@@ -8,6 +8,8 @@ import { followerQueue } from '@services/queues/follower.queue';
 import { ObjectId } from 'mongodb';
 import mongoose from 'mongoose';
 import { socketIoFollowerObject } from '@sockets/follower';
+import {Config} from '@root/config';
+import {followerService} from "@services/db/follower.service";
 
 const followerCache: FollowerCache = new FollowerCache();
 const userCache: UserCache = new UserCache();
@@ -32,12 +34,17 @@ export class FollowUser {
         const addFolloweeToCache: Promise<void> = followerCache.saveFollowerToCache(`followee:${followerId}`, `${req.currentUser!.userId}`);
         await Promise.all([addFolloweeToCache, addFolloweeToCache]);
 
-        followerQueue.addFollowerJob('addFollowerToDb', {
-            keyOne: `${req.currentUser!.userId}`,
-            keyTwo: `${followerId}`,
-            username: `${req.currentUser!.username}`,
-            followerDocumentId: followerObjectId
-        });
+        if (Config.NODE_ENV === 'development') {
+            followerQueue.addFollowerJob('addFollowerToDb', {
+                keyOne: `${req.currentUser!.userId}`,
+                keyTwo: `${followerId}`,
+                username: `${req.currentUser!.username}`,
+                followerDocumentId: followerObjectId
+            });
+        }
+        else {
+            await followerService.addFollowerToDb(`${req.currentUser!.userId}`, `${followerId}`, `${req.currentUser!.username}`, followerObjectId);
+        }
 
         res.status(HTTP_STATUS.OK).json({ message: 'Following user now' });
     }

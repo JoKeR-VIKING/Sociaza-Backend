@@ -11,6 +11,9 @@ import { imageQueue } from '@services/queues/image.queue';
 import { UploadApiResponse } from 'cloudinary';
 import { uploads, videoUpload } from '@globals/helpers/cloudinaryUpload';
 import { BadRequestError } from '@globals/helpers/errorHandler';
+import {postService} from "@services/db/post.service";
+import { Config } from '@root/config';
+import {imageService} from "@services/db/image.service";
 
 const postCache: PostCache = new PostCache();
 
@@ -57,7 +60,12 @@ export class CreatePost {
             createdPost: createdPost
         } as ISavePostToCache);
 
-        postQueue.addPostJob('addPostToDb', { key: req.currentUser!.userId, value: createdPost });
+        if (Config.NODE_ENV === 'development') {
+            postQueue.addPostJob('addPostToDb', { key: req.currentUser!.userId, value: createdPost });
+        }
+        else {
+            await postService.createPost(req.currentUser!.userId, createdPost);
+        }
 
         res.status(HTTP_STATUS.CREATED).json({ message: 'Post created successfully!' });
     }
@@ -110,12 +118,18 @@ export class CreatePost {
             createdPost: createdPost
         } as ISavePostToCache);
 
-        postQueue.addPostJob('addPostToDb', { key: req.currentUser!.userId, value: createdPost });
-        imageQueue.addImageJob('addImageToDb', {
-            key: req.currentUser!.userId,
-            imgId: result.public_id,
-            imgVersion: result.version.toString()
-        });
+        if (Config.NODE_ENV === 'development') {
+            postQueue.addPostJob('addPostToDb', { key: req.currentUser!.userId, value: createdPost });
+            imageQueue.addImageJob('addImageToDb', {
+                key: req.currentUser!.userId,
+                imgId: result.public_id,
+                imgVersion: result.version.toString()
+            });
+        }
+        else {
+            await postService.createPost(req.currentUser!.userId, createdPost);
+            await imageService.addImage(req.currentUser!.userId, result.public_id, result.version.toString(), '');
+        }
 
         res.status(HTTP_STATUS.CREATED).json({ message: 'Post created successfully!' });
     }
@@ -168,7 +182,12 @@ export class CreatePost {
             createdPost: createdPost
         } as ISavePostToCache);
 
-        postQueue.addPostJob('addPostToDb', { key: req.currentUser!.userId, value: createdPost });
+        if (Config.NODE_ENV === 'development') {
+            postQueue.addPostJob('addPostToDb', { key: req.currentUser!.userId, value: createdPost });
+        }
+        else {
+            await postService.createPost(req.currentUser!.userId, createdPost);
+        }
 
         res.status(HTTP_STATUS.CREATED).json({ message: 'Post created successfully!' });
     }

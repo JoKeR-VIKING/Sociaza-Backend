@@ -12,6 +12,7 @@ import { resetPasswordTemplate } from '@services/emails/templates/resetPassword/
 import { emailQueue } from '@services/queues/email.queue';
 import publicIp from 'ip';
 import {passwordSchema} from "@auth/schemes/signup.scheme";
+import {mailTransport} from "@services/emails/mail.transporter";
 
 export class Password {
     @joiValidation(emailSchema)
@@ -29,11 +30,17 @@ export class Password {
 
         const resetLink: string = `${Config.CLIENT_URL}/reset-password?token=${randomCharacters}`;
         const template: string = forgotPasswordTemplate.template(user.username, resetLink);
-        emailQueue.addEmailJob('forgotPasswordEmail', {
-            receiverEmail: email,
-            template: template,
-            subject: 'Password reset link',
-        });
+
+        if (Config.NODE_ENV === 'development') {
+            emailQueue.addEmailJob('forgotPasswordEmail', {
+                receiverEmail: email,
+                template: template,
+                subject: 'Password reset link',
+            });
+        }
+        else {
+            await mailTransport.sendEmail(email, 'Password reset link', template);
+        }
 
         res.status(HTTP_STATUS.OK).json({ message: 'Password reset email sent' });
     }
@@ -57,11 +64,17 @@ export class Password {
         await user.save();
 
         const template: string = resetPasswordTemplate.template(user.username, user.email, publicIp.address());
-        emailQueue.addEmailJob('forgotPasswordEmail', {
-            receiverEmail: user.email,
-            template: template,
-            subject: 'Password reset confirmation',
-        });
+
+        if (Config.NODE_ENV === 'development') {
+            emailQueue.addEmailJob('forgotPasswordEmail', {
+                receiverEmail: user.email,
+                template: template,
+                subject: 'Password reset confirmation',
+            });
+        }
+        else {
+            await mailTransport.sendEmail(user.email, 'Password reset confirmation', template);
+        }
 
         res.status(HTTP_STATUS.OK).json({ message: 'Password reset confirmation sent' });
     }

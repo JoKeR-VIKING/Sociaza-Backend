@@ -12,6 +12,7 @@ import { socketIoImageObject } from '@sockets/image';
 import { imageQueue } from '@services/queues/image.queue';
 import { IBgUploadResponse } from '@image/interfaces/image.interface';
 import { Helpers } from '@globals/helpers/helpers';
+import {imageService} from "@services/db/image.service";
 
 const userCache: UserCache = new UserCache();
 
@@ -32,12 +33,18 @@ export class AddImage {
         ) as IUserDocument;
 
         socketIoImageObject.emit('update user', cachedUser);
-        imageQueue.addImageJob('addUserProfileImageToDb', {
-            key: `${req.currentUser!.userId}`,
-            value: url,
-            imgId: result.public_id,
-            imgVersion: result.version.toString()
-        });
+
+        if (Config.NODE_ENV === 'development') {
+            imageQueue.addImageJob('addUserProfileImageToDb', {
+                key: `${req.currentUser!.userId}`,
+                value: url,
+                imgId: result.public_id,
+                imgVersion: result.version.toString()
+            });
+        }
+        else {
+            await imageService.addUserProfileImageToDb(`${req.currentUser!.userId}`, url, result.public_id, result.version.toString());
+        }
 
         res.status(HTTP_STATUS.OK).json({ message: 'Image added successfully!' });
     }
@@ -65,11 +72,16 @@ export class AddImage {
             userId: response[0]
         });
 
-        imageQueue.addImageJob('addBackgroundImageInDb', {
-            key: `${req.currentUser!.userId}`,
-            imgId: publicId,
-            imgVersion: version.toString()
-        });
+        if (Config.NODE_ENV === 'development') {
+            imageQueue.addImageJob('addBackgroundImageInDb', {
+                key: `${req.currentUser!.userId}`,
+                imgId: publicId,
+                imgVersion: version.toString()
+            });
+        }
+        else {
+            await imageService.addBackgroundImageToDb(`${req.currentUser!.userId}`, publicId, version.toString());
+        }
 
         res.status(HTTP_STATUS.OK).json({ message: 'Background Image added successfully!' });
     }

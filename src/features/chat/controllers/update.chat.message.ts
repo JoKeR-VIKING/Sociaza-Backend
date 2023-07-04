@@ -10,6 +10,7 @@ import { MessageCache } from '@services/redis/message.cache';
 import { chatQueue } from '@services/queues/chat.queue';
 import { joiValidation } from '@globals/decorators/joiValidationDecorators';
 import { markChatSchema } from '@chat/schemes/chat';
+import {chatService} from "@services/db/chat.service";
 
 const messageCache: MessageCache = new MessageCache();
 
@@ -22,10 +23,15 @@ export class UpdateChatMessage {
         socketIOChatObject.emit('message read', updatedMessage);
         socketIOChatObject.emit('chat list', updatedMessage);
 
-        chatQueue.addChatJob('updateMessageInDb', {
-            senderId: new mongoose.Types.ObjectId(senderId),
-            receiverId: new mongoose.Types.ObjectId(receiverId)
-        });
+        if (Config.NODE_ENV === 'development') {
+            chatQueue.addChatJob('updateMessageInDb', {
+                senderId: new mongoose.Types.ObjectId(senderId),
+                receiverId: new mongoose.Types.ObjectId(receiverId)
+            });
+        }
+        else {
+            chatService.updateMessageInDb(senderId, receiverId);
+        }
 
         res.status(HTTP_STATUS.OK).json({ message: 'Message read' });
     }

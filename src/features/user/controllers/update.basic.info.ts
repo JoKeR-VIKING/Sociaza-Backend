@@ -6,6 +6,7 @@ import { UserCache } from '@services/redis/user.cache';
 import { userQueue } from '@services/queues/user.queue';
 import { joiValidation } from '@globals/decorators/joiValidationDecorators';
 import {basicInfoSchema, notificationsSettingsSchema, socialLinksSchema} from '@user/schemes/info';
+import {Config} from "@root/config";
 
 const userCache: UserCache = new UserCache();
 
@@ -16,10 +17,15 @@ export class UpdateBasicInfo {
             await userCache.updateSingleUserItemInCache(`${req.currentUser!.userId}`, key, `${value}`);
         }
 
-        userQueue.addUserJob('updateUserInfo', {
-            key: `${req.currentUser!.userId}`,
-            value: req.body
-        });
+        if (Config.NODE_ENV === 'development') {
+            userQueue.addUserJob('updateUserInfo', {
+                key: `${req.currentUser!.userId}`,
+                value: req.body
+            });
+        }
+        else {
+            await userService.updateUserInfo(`${req.currentUser!.userId}`, req.body);
+        }
 
         res.status(HTTP_STATUS.OK).json({ message: 'Updated info successfully' });
     }
@@ -28,10 +34,15 @@ export class UpdateBasicInfo {
     public async updateUserSocial(req: Request, res: Response): Promise<void> {
         await userCache.updateSingleUserItemInCache(`${req.currentUser!.userId}`, 'social', req.body);
 
-        userQueue.addUserJob('updateSocialLinks', {
-            key: `${req.currentUser!.userId}`,
-            value: req.body
-        });
+        if (Config.NODE_ENV === 'development') {
+            userQueue.addUserJob('updateSocialLinks', {
+                key: `${req.currentUser!.userId}`,
+                value: req.body
+            });
+        }
+        else {
+            await userService.updateSocialFields(`${req.currentUser!.userId}`, req.body);
+        }
 
         res.status(HTTP_STATUS.OK).json({ message: 'Updated social links successfully' });
     }
@@ -40,10 +51,15 @@ export class UpdateBasicInfo {
     public async updateNotifiationSettings(req: Request, res: Response): Promise<void> {
         await userCache.updateSingleUserItemInCache(`${req.currentUser!.userId}`, 'notifications', req.body);
 
-        userQueue.addUserJob('updateNotificationSettings', {
-            key: `${req.currentUser!.userId}`,
-            value: req.body
-        });
+        if (Config.NODE_ENV === 'development') {
+            userQueue.addUserJob('updateNotificationSettings', {
+                key: `${req.currentUser!.userId}`,
+                value: req.body
+            });
+        }
+        else {
+            await userService.updateNotificationSettings(`${req.currentUser!.userId}`, req.body);
+        }
 
         res.status(HTTP_STATUS.OK).json({ message: 'Updated notification settings', settings: req.body });
     }

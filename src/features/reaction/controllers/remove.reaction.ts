@@ -3,6 +3,8 @@ import HTTP_STATUS from 'http-status-codes';
 import { ReactionCache } from '@services/redis/reaction.cache';
 import { IReactionJob } from '@reaction/interfaces/reaction.interface';
 import { reactionQueue } from '@services/queues/reaction.queue';
+import {Config} from "@root/config";
+import {reactionService} from "@services/db/reaction.service";
 
 const reactionCache: ReactionCache = new ReactionCache();
 
@@ -18,7 +20,12 @@ export class RemoveReaction {
             previousReactions: previousReaction
         };
 
-        reactionQueue.addReactionJob('removeReactionFromDb', databaseReactionData);
+        if (Config.NODE_ENV === 'development') {
+            reactionQueue.addReactionJob('removeReactionFromDb', databaseReactionData);
+        }
+        else {
+            await reactionService.removeReactionFromDb(databaseReactionData);
+        }
 
         res.status(HTTP_STATUS.OK).json({ message: 'Reaction removed successfully.' });
     }

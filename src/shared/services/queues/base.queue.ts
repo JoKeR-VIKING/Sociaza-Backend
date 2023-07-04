@@ -24,7 +24,22 @@ export abstract class BaseQueue {
     log: Logger;
 
     constructor(queueName: string) {
-        this.queue = new Queue(queueName, `${Config.REDIS_HOST}`);
+        this.queue = new Queue(queueName, `${Config.REDIS_HOST}`, {
+            defaultJobOptions: {
+                attempts: 5,
+                removeOnComplete: true,
+                backoff: 5000
+            },
+            limiter: {
+                max: 1000,
+                duration: 5000,
+                bounceBack: true
+            },
+            settings: {
+                maxStalledCount: 2,
+                retryProcessDelay: 500
+            }
+        });
         bullAdapters.push(new BullAdapter(this.queue));
         bullAdapters = [...new Set(bullAdapters)];
         serverAdapter = new ExpressAdapter();

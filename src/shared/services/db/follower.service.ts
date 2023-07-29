@@ -9,7 +9,7 @@ import { NotificationModel } from '@notification/models/notification.schema';
 import { socketIoNotificationObject } from '@sockets/notification';
 import { notificationTemplate } from '@services/emails/templates/notifications/notification.template';
 import { emailQueue } from '@services/queues/email.queue';
-import {map} from "lodash";
+import { map } from 'lodash';
 
 class FollowerService {
     public async addFollowerToDb(userId: string, followeeId: string, username: string, followerDocumentId: ObjectId): Promise<void> {
@@ -38,8 +38,9 @@ class FollowerService {
         ]);
 
         const response: [BulkWriteResult, IUserDocument | null] = await Promise.all([user, UserModel.findOne({ _id: followeeId })]);
+        // console.log(response);
 
-        if (response[1]?.notifications.comments && userId != followeeId) {
+        if (response[1]?.notifications.follows && userId != followeeId) {
             const notificationModel: INotificationDocument = new NotificationModel();
             const notification = await notificationModel.insertNotification({
                 userTo: followeeId,
@@ -59,13 +60,13 @@ class FollowerService {
 
             socketIoNotificationObject.emit('insert notification', notification, { userTo: followeeId });
 
-            const template: string = notificationTemplate.template({
-                username: response[1].username!,
-                message: `${username} has commented on your post`,
-                header: 'Follower Notification'
-            });
-
-            emailQueue.addEmailJob('followerEmail', { receiverEmail: response[1].email!, subject: 'Sociaza follower notification', template: template });
+            // const template: string = notificationTemplate.template({
+            //     username: response[1].username!,
+            //     message: `${username} has commented on your post`,
+            //     header: 'Follower Notification'
+            // });
+            //
+            // emailQueue.addEmailJob('followerEmail', { receiverEmail: response[1].email!, subject: 'Sociaza follower notification', template: template });
         }
     }
 

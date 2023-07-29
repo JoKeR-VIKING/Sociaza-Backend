@@ -24,7 +24,6 @@ export class FollowerCache extends BaseCache {
                 await this.client.connect();
 
             await this.client.LPUSH(key, value);
-            await this.client.disconnect();
         }
         catch (err) {
             log.error(err);
@@ -38,7 +37,6 @@ export class FollowerCache extends BaseCache {
                 await this.client.connect();
 
             await this.client.LREM(key, 1, value);
-            await this.client.disconnect();
         }
         catch (err) {
             log.error(err);
@@ -52,7 +50,6 @@ export class FollowerCache extends BaseCache {
                 await this.client.connect();
 
             await this.client.HINCRBY(`users:${userId}`, prop, value);
-            await this.client.disconnect();
         }
         catch (err) {
             log.error(err);
@@ -85,7 +82,6 @@ export class FollowerCache extends BaseCache {
                 reply.push(data);
             }
 
-            await this.client.disconnect();
             return reply;
         }
         catch (err) {
@@ -113,7 +109,6 @@ export class FollowerCache extends BaseCache {
 
             multi.HSET(`users:${key}`, `${prop}`, JSON.stringify(blocked));
             await multi.exec();
-            await this.client.disconnect();
         }
         catch (err) {
             log.error(err);

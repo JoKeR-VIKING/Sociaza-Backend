@@ -85,8 +85,6 @@ export class UserCache extends BaseCache {
 
             for (let i=0;i<dataToSave.length;i += 2)
                 await this.client.HSET(`users:${key}`, dataToSave[i], dataToSave[i + 1]);
-
-            await this.client.disconnect();
         }
         catch (err) {
             log.error(err);
@@ -113,7 +111,6 @@ export class UserCache extends BaseCache {
             userFromCache.bgImageVersion = Helpers.parseJson(`${userFromCache.bgImageVersion}`);
             userFromCache.profilePicture = Helpers.parseJson(`${userFromCache.profilePicture}`);
 
-            await this.client.disconnect();
             return userFromCache;
         }
         catch (err) {
@@ -156,7 +153,6 @@ export class UserCache extends BaseCache {
                 userReplied.push(user);
             }
 
-            await this.client.disconnect();
             return userReplied;
         }
         catch (err) {
@@ -201,7 +197,6 @@ export class UserCache extends BaseCache {
                 user.profilePicture = Helpers.parseJson(`${user.profilePicture}`);
             }
 
-            await this.client.disconnect();
             return replies;
         }
         catch (err) {
@@ -216,9 +211,7 @@ export class UserCache extends BaseCache {
                 this.client.connect();
 
             await this.client.HSET(`users:${userId}`, `${props}`, JSON.stringify(value));
-            const user: IUserDocument = await this.getUserFromCache(userId) as IUserDocument;
-            await this.client.disconnect();
-            return user;
+            return await this.getUserFromCache(userId) as IUserDocument;
         }
         catch (err) {
             log.error(err);
@@ -231,9 +224,7 @@ export class UserCache extends BaseCache {
             if (!this.client.isOpen)
                 this.client.connect();
 
-            const count: number = await this.client.ZCARD('user');
-            await this.client.disconnect();
-            return count;
+            return await this.client.ZCARD('user');
         }
         catch (err) {
             log.error(err);

@@ -13,7 +13,8 @@ export class CurrentUser {
         let user = null;
 
         const cachedUser: IUserDocument = await userCache.getUserFromCache(`${req.currentUser!.userId}`) as IUserDocument;
-        const existingUser: IUserDocument = cachedUser ? cachedUser : await userService.getUserByUserId(`${req.currentUser!.userId}`);
+        // console.log(Object.getPrototypeOf(cachedUser));
+        const existingUser: IUserDocument = Object.getPrototypeOf(cachedUser) ? cachedUser : await userService.getUserByUserId(`${req.currentUser!.userId}`);
 
         if (Object.keys(existingUser).length > 0)
         {

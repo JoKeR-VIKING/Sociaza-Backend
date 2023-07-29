@@ -13,11 +13,11 @@ export class UnfollowUser {
     public async unfollow(req: Request, res: Response): Promise<void> {
         const { followeeId, followerId } = req.params;
 
-        const removeFollowerFromCache: Promise<void> = followerCache.removeFollowerFromCache(`follower:${req.currentUser!.userId}`, followeeId);
-        const removeFollowingFromCache: Promise<void> = followerCache.removeFollowerFromCache(`followee:${followeeId}`, followerId);
+        const removeFollowerFromCache: Promise<void> = followerCache.removeFollowerFromCache(`follower:${followeeId}`, followerId);
+        const removeFollowingFromCache: Promise<void> = followerCache.removeFollowerFromCache(`followee:${followerId}`, followeeId);
 
-        const followersCount: Promise<void> = followerCache.updateFollowersCountInCache(`${followeeId}`, 'followersCount', -1);
-        const followingCount: Promise<void> = followerCache.updateFollowersCountInCache(`${followerId}`, 'followingCount', -1);
+        const followersCount: Promise<void> = followerCache.updateFollowersCountInCache(`${followerId}`, 'followersCount', -1);
+        const followingCount: Promise<void> = followerCache.updateFollowersCountInCache(`${followeeId}`, 'followingCount', -1);
 
         await Promise.all([removeFollowerFromCache, removeFollowingFromCache, followersCount, followingCount]);
 

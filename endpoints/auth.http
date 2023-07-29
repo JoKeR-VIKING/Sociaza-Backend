@@ -14,14 +14,14 @@ withCredentials: true
 
 ###
 
-POST https://sociaza.onrender.com/api/v1/signin
+POST {{ baseUrl }}/{{ urlPath }}/signin
 Content-Type: application/json
 Accept: application/json
 withCredentials: true
 
 {
-    "username": "tests",
-    "password": "Test@123"
+    "username": "divya",
+    "password": "Pass@123"
 }
 
 ###

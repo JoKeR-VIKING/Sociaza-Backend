@@ -28,7 +28,7 @@ export class FollowUser {
 
         const followerObjectId: ObjectId = new ObjectId();
         const addFolloweeData: IFollowerData = FollowUser.prototype.userData(response[0]);
-        // socketIoFollowerObject.emit('add follower', addFolloweeData);
+        socketIoFollowerObject.emit('add follower', addFolloweeData);
 
         const addFollowerToCache: Promise<void> = followerCache.saveFollowerToCache(`follower:${req.currentUser!.userId}`, `${followerId}`);
         const addFolloweeToCache: Promise<void> = followerCache.saveFollowerToCache(`followee:${followerId}`, `${req.currentUser!.userId}`);

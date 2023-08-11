@@ -4,7 +4,7 @@ import { INotificationTemplate } from '@notification/interface/notification.inte
 
 class NotificationTemplate {
     public template(templateParams: INotificationTemplate): string {
-        return ejs.render(fs.readFileSync(__dirname + '/notification.template.ejs', 'utf-8'), {
+        return ejs.render(fs.readFileSync('./notification.template.ejs', 'utf-8'), {
             username: templateParams.username,
             header: templateParams.header,
             message: templateParams.message

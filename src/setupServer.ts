@@ -109,7 +109,7 @@ export class SociazaServer {
     private async createSocketIO(httpServer: http.Server): Promise<Server> {
         const io: Server = new Server(httpServer, {
             cors: {
-                origin: Config.CLIENT_URL,
+                origin: '*',
                 methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS']
             }
         });

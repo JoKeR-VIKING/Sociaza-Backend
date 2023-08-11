@@ -8,8 +8,8 @@ import { followerQueue } from '@services/queues/follower.queue';
 import { ObjectId } from 'mongodb';
 import mongoose from 'mongoose';
 import { socketIoFollowerObject } from '@sockets/follower';
-import {Config} from '@root/config';
-import {followerService} from "@services/db/follower.service";
+import { Config } from '@root/config';
+import { followerService } from '@services/db/follower.service';
 
 const followerCache: FollowerCache = new FollowerCache();
 const userCache: UserCache = new UserCache();
@@ -28,7 +28,7 @@ export class FollowUser {
 
         const followerObjectId: ObjectId = new ObjectId();
         const addFolloweeData: IFollowerData = FollowUser.prototype.userData(response[0]);
-        // socketIoFollowerObject.emit('add follower', addFolloweeData);
+        socketIoFollowerObject.emit('add follower', addFolloweeData);
 
         const addFollowerToCache: Promise<void> = followerCache.saveFollowerToCache(`follower:${req.currentUser!.userId}`, `${followerId}`);
         const addFolloweeToCache: Promise<void> = followerCache.saveFollowerToCache(`followee:${followerId}`, `${req.currentUser!.userId}`);

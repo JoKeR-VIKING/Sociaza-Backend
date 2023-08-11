@@ -36,8 +36,6 @@ export class MessageCache extends BaseCache {
 
                 if (receiverIndex < 0)
                     await this.client.RPUSH(`chatList:${senderId}`, JSON.stringify({ receiverId, conversationId }));
-
-                await this.client.disconnect();
             }
         }
         catch (err) {
@@ -52,7 +50,6 @@ export class MessageCache extends BaseCache {
                 await this.client.connect();
 
             await this.client.RPUSH(`messages:${conversationId}`, JSON.stringify(value));
-            await this.client.disconnect();
         }
         catch (err) {
             log.error(err);
@@ -80,7 +77,6 @@ export class MessageCache extends BaseCache {
                 chatUsers = users;
             }
 
-            await this.client.disconnect();
             return chatUsers;
         }
         catch (err) {
@@ -109,7 +105,6 @@ export class MessageCache extends BaseCache {
                 chatUsers = users;
             }
 
-            await this.client.disconnect();
             return chatUsers;
         }
         catch (err) {
@@ -133,7 +128,6 @@ export class MessageCache extends BaseCache {
                 conversationChatList.push(Helpers.parseJson(lastMessage));
             }
 
-            await this.client.disconnect();
             return conversationChatList;
         }
         catch (err) {
@@ -162,11 +156,9 @@ export class MessageCache extends BaseCache {
                     chatMessages.push(Helpers.parseJson(item) as IMessageData);
                 }
 
-                await this.client.disconnect();
                 return chatMessages;
             }
             else {
-                await this.client.disconnect();
                 return [];
             }
         }
@@ -189,7 +181,6 @@ export class MessageCache extends BaseCache {
                 chatItem.deleteForEveyone = true;
 
             await this.client.LSET(`messages:${receiver.conversationId}`, index, JSON.stringify(chatItem));
-            await this.client.disconnect();
             return chatItem;
         }
         catch (err) {
@@ -226,7 +217,6 @@ export class MessageCache extends BaseCache {
             }
 
             const lastMessage: string = await this.client.LINDEX(`messages:${parsedReceiver.conversationId}`, -1) as string;
-            await this.client.disconnect();
             return Helpers.parseJson(lastMessage) as IMessageData;
         }
         catch (err) {
@@ -253,7 +243,6 @@ export class MessageCache extends BaseCache {
             return listItem.includes(messageId);
         });
 
-        await this.client.disconnect();
         return { index, message, receiver: parsedReceiver };
     }
 
@@ -270,7 +259,6 @@ export class MessageCache extends BaseCache {
                 chatUsersList.push(chatUser);
             }
 
-            await this.client.disconnect();
             return chatUsersList;
         }
         catch (err) {
@@ -309,7 +297,6 @@ export class MessageCache extends BaseCache {
             }
 
             const updatedMessage: string = await this.client.LINDEX(`messages:${conversationId}`, messageIndex) as string;
-            await this.client.disconnect();
             return Helpers.parseJson(updatedMessage);
         }
         catch (err) {

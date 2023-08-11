@@ -16,7 +16,7 @@ const addReactionSchema: ObjectSchema = Joi.object().keys({
 });
 
 const removeReactionSchema: ObjectSchema = Joi.object().keys({
-    postReactions: Joi.object().optional().allow(null, ''),
+    postReaction: Joi.object().optional().allow(null, ''),
 });
 
 export { addReactionSchema, removeReactionSchema };

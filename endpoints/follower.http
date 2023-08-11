@@ -1,11 +1,11 @@
-PUT {{ baseUrl }}/{{ urlPath }}/user/follow/642126e0e3372d84b9f4882e
+PUT {{ baseUrl }}/{{ urlPath }}/user/follow/64ab233c66a8fbb861eda699
 Content-Type: application/json
 Accept: application/json
 withCredentials: true
 
 ###
 
-PUT {{ baseUrl }}/{{ urlPath }}/user/unfollow/641c519dd772628aa59b05ac/6401d80583eedaf5eb6d20e9
+PUT {{ baseUrl }}/{{ urlPath }}/user/unfollow/64b6e9a10a283df520a16aac/64ab233c66a8fbb861eda699
 Content-Type: application/json
 Accept: application/json
 withCredentials: true

@@ -39,6 +39,7 @@ export class SociazaServer {
                 keys: [Config.SECRET_KEY_ONE!, Config.SECRET_KEY_TWO!],
                 maxAge: 24 * 36000 * 1000,
                 secure: true,
+                sameSite: "none"
             })
         );
 

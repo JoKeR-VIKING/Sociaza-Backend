@@ -4,12 +4,12 @@ Accept: application/json
 withCredentials: true
 
 {
-    "userTo": "6401d80583eedaf5eb6d20e9",
-    "postId": "6419de6e6fa0f6657a8f5ac1",
-    "type": "love",
-    "profilePicture": "https://res.cloudinary.com/dslkigtvk/image/upload/v1677396622/63fb0a8cea6213a5ae251143.jpg",
+    "userTo": "64ab233c66a8fbb861eda699",
+    "postId": "64ca775d0843ba35d039504a",
+    "type": "haha",
+    "profilePicture": "https://res.cloudinary.com/dslkigtvk/image/upload/v1689753298/64ab233c66a8fbb861eda699.png",
     "previousReaction": "",
-    "postReaction": { "like": 0, "love": 1, "haha": 0, "sad": 0, "wow": 0, "angry": 0 }
+    "postReaction": { "like": 0, "love": 0, "haha": 1, "sad": 0, "wow": 0, "angry": 0 }
 }
 
 ###
@@ -41,7 +41,7 @@ withCredentials: true
 
 ###
 
-GET {{ baseUrl }}/{{ urlPath }}/reaction/post/64115eff0b0724ace791afdd
+GET {{ baseUrl }}/{{ urlPath }}/reaction/post/64ca775d0843ba35d039504a
 Content-Type: application/json
 Accept: application/json
 withCredentials: true

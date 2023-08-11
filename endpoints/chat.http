@@ -4,12 +4,12 @@ Accept: application/json
 withCredentials: true
 
 {
-    "conversationId": "649f0c9afaf61e5f2767f9b5",
-    "receiverId": "6421270ee3372d84b9f48835",
-    "receiverUsername": "Divya",
-    "receiverAvatarColor": "red",
-    "receiverProfilePicture": "https://res.cloudinary.com/dslkigtvk/image/upload/v1679894288/6421270ee3372d84b9f48835",
-    "body": "Hello!",
+    "conversationId": "64d3b2d357b1c55df9f17c8a",
+    "receiverId": "64ab233c66a8fbb861eda699",
+    "receiverUsername": "Pratham",
+    "receiverAvatarColor": "#1e6bd3",
+    "receiverProfilePicture": "https://res.cloudinary.com/dslkigtvk/image/upload/v1689753298/64ab233c66a8fbb861eda699.png",
+    "body": "hello",
     "gifUrl": "",
     "isRead": false,
     "selectedImage": ""
@@ -36,7 +36,7 @@ withCredentials: true
 
 ###
 
-GET {{ baseUrl }}/{{ urlPath }}/chat/message/user/6421270ee3372d84b9f48835
+GET {{ baseUrl }}/{{ urlPath }}/chat/message/user/64b6e9a10a283df520a16aac
 Content-Type: application/json
 Accept: application/json
 withCredentials: true

@@ -50,6 +50,7 @@ export class UpdatePost {
 
     @joiValidation(postWithImageSchema)
     public async postWithImage(req: Request, res: Response): Promise<void> {
+        console.log(req.body);
         const { imgId, imageVersion } = req.body;
 
         if (imgId && imageVersion) {
@@ -83,6 +84,8 @@ export class UpdatePost {
     private async addFile(req: Request): Promise<UploadApiResponse> {
         const { post, bgColor, feelings, privacy, gifUrl, profilePicture, postImage, postVideo } = req.body;
         const { postId } = req.params;
+
+        // console.log(postImage, typeof postImage);
 
         const result: UploadApiResponse = postImage ? await uploads(postImage) as UploadApiResponse : await videoUpload(postVideo) as UploadApiResponse;
         if (!result!.public_id)

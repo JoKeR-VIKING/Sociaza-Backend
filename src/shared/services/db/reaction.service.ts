@@ -12,6 +12,8 @@ import { NotificationModel } from '@notification/models/notification.schema';
 import { socketIoNotificationObject } from '@sockets/notification';
 import { notificationTemplate } from '@services/emails/templates/notifications/notification.template';
 import { emailQueue } from '@services/queues/email.queue';
+import { Config } from '@root/config';
+import { mailTransport } from '@services/emails/mail.transporter';
 
 const userCache: UserCache = new UserCache();
 
@@ -62,7 +64,12 @@ class ReactionService {
                 header: 'Reaction Notification'
             });
 
-            emailQueue.addEmailJob('reactionEmail', { receiverEmail: updatedReaction[0].email!, subject: 'Sociaza follower notification', template: template });
+            if (Config.NODE_ENV === 'development') {
+                emailQueue.addEmailJob('reactionEmail', { receiverEmail: updatedReaction[0].email!, subject: 'Sociaza reaction notification', template: template });
+            }
+            else {
+                await mailTransport.sendEmail(updatedReaction[0].email!, 'Sociaza reaction notification', template);
+            }
         }
     }
 

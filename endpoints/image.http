@@ -34,7 +34,7 @@ withCredentials: true
 
 ###
 
-GET {{ baseUrl }}/{{ urlPath }}/images/642126e0e3372d84b9f4882e
+GET {{ baseUrl }}/{{ urlPath }}/images/64ab233c66a8fbb861eda699
 Content-Type: application/json
 Accept: application/json
 withCredentials: true

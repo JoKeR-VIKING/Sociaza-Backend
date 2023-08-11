@@ -109,7 +109,7 @@ export class CreatePost {
             }
         } as IPostDocument;
 
-        socketIoPostObject.emit('add post with image', createdPost);
+        socketIoPostObject.emit('add post', createdPost);
 
         await postCache.savePostToCache({
             key: postObjectId,
@@ -128,7 +128,7 @@ export class CreatePost {
         }
         else {
             await postService.createPost(req.currentUser!.userId, createdPost);
-            await imageService.addImage(req.currentUser!.userId, result.public_id, result.version.toString(), '');
+            await imageService.addImage(req.currentUser!.userId, result.public_id, result.version.toString(), 'background');
         }
 
         res.status(HTTP_STATUS.CREATED).json({ message: 'Post created successfully!' });
@@ -173,7 +173,7 @@ export class CreatePost {
             }
         } as IPostDocument;
 
-        socketIoPostObject.emit('add post with image', createdPost);
+        socketIoPostObject.emit('add post', createdPost);
 
         await postCache.savePostToCache({
             key: postObjectId,

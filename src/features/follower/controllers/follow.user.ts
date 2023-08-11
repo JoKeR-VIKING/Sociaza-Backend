@@ -8,8 +8,8 @@ import { followerQueue } from '@services/queues/follower.queue';
 import { ObjectId } from 'mongodb';
 import mongoose from 'mongoose';
 import { socketIoFollowerObject } from '@sockets/follower';
-import {Config} from '@root/config';
-import {followerService} from "@services/db/follower.service";
+import { Config } from '@root/config';
+import { followerService } from '@services/db/follower.service';
 
 const followerCache: FollowerCache = new FollowerCache();
 const userCache: UserCache = new UserCache();

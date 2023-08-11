@@ -62,7 +62,7 @@ class ChatService {
                     createdAt: '$result.createdAt'
                 }
             },
-            { $sort: { $createdAt: 1 } }
+            { $sort: { createdAt: 1 } }
         ]);
     }
 

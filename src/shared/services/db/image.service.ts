@@ -35,10 +35,10 @@ class ImageService {
     public async addImage(userId: string, imgId: string, imgVersion: string, type: string): Promise<void> {
         await ImageModel.create({
             userId: userId,
-            bgImageVersion: type === 'background' ? imgVersion : '',
-            bgImageId: type === 'background' ? imgId : '',
-            imgVersion: type === 'profile' ? imgVersion : '',
-            imgId: type === 'profile' ? imgId : ''
+            bgImageVersion: imgVersion,
+            bgImageId: imgId,
+            imgVersion: imgVersion,
+            imgId: imgId
         });
     }
 }

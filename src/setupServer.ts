@@ -38,7 +38,7 @@ export class SociazaServer {
                 name: 'session',
                 keys: [Config.SECRET_KEY_ONE!, Config.SECRET_KEY_TWO!],
                 maxAge: 24 * 36000 * 1000,
-                secure: false,
+                secure: true,
             })
         );
 

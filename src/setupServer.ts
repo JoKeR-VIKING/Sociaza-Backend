@@ -50,7 +50,7 @@ export class SociazaServer {
 
         app.use(
             cors ({
-                origin: new RegExp("/^" + Config.CLIENT_URL + "/"),
+                origin: Config.CLIENT_URL,
                 credentials: true,
                 optionsSuccessStatus: 200,
                 methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],

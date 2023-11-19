@@ -63,8 +63,8 @@ export class GetUserProfile {
         const { userId, username, uId } = req.params;
         const userName: string = Helpers.firstLetterUppercase(username);
 
-        const cachedUser: IUserDocument = await userCache.getUserFromCache(userId) as IUserDocument;
-        const cachedUserPosts: IPostDocument[] = await postCache.getUserPostsFromCache('post', parseInt(uId, 10)) as IPostDocument[];
+        const cachedUser: IUserDocument = null;
+        const cachedUserPosts: IPostDocument[] = null;
 
         const existingUser: IUserDocument = cachedUser ? cachedUser : await userService.getUserByUserId(userId) as IUserDocument;
         const existingUserPosts: IPostDocument[] = cachedUserPosts ? cachedUserPosts : await postService.getPosts({ username: userName }, 0, 100, { createdAt: -1 }) as IPostDocument[];

@@ -3,6 +3,7 @@ import HTTP_STATUS from 'http-status-codes';
 import { IPostDocument } from '@post/interfaces/post.interface';
 import { PostCache } from '@services/redis/post.cache';
 import { postService } from '@services/db/post.service';
+import { Config } from '@root/config'; 
 
 const postCache: PostCache = new PostCache();
 const PAGE_SIZE = 10;
@@ -17,9 +18,9 @@ export class GetPost {
 
         let totalPosts = 0;
 
-        const cachedPosts:IPostDocument[] = await postCache.getPostsFromCache('post', newSkip, limit);
+        const cachedPosts: IPostDocument[] = await postCache.getPostsFromCache('post', newSkip, limit);
 
-        if (cachedPosts.length) {
+        if (Config.NODE_ENV === 'development' && cachedPosts.length) {
             posts = cachedPosts;
             totalPosts = await postCache.getTotalPostsFromCache();
         }
@@ -38,7 +39,7 @@ export class GetPost {
         const newSkip: number = skip === 0 ? skip : skip + 1;
         let posts: IPostDocument[] = [];
 
-        const cachedPosts:IPostDocument[] = await postCache.getPostsWithImageFromCache('post', newSkip, limit);
+        const cachedPosts: IPostDocument[] = Config.NODE_ENV === 'development' ? await postCache.getPostsWithImageFromCache('post', newSkip, limit) : [];
 
         posts = cachedPosts.length ? cachedPosts : await postService.getPosts({ imgId: '$ne', gifUrl: '$ne' }, skip, limit, { createdAt: -1 });
         res.status(HTTP_STATUS.OK).json({ message: 'All posts with image', posts });
@@ -51,7 +52,7 @@ export class GetPost {
         const newSkip: number = skip === 0 ? skip : skip + 1;
         let posts: IPostDocument[] = [];
 
-        const cachedPosts:IPostDocument[] = await postCache.getPostsWithVideoFromCache('post', newSkip, limit);
+        const cachedPosts:IPostDocument[] = Config.NODE_ENV === 'development' ? await postCache.getPostsWithVideoFromCache('post', newSkip, limit) : [];
 
         posts = cachedPosts.length ? cachedPosts : await postService.getPosts({ videoId: '$ne' }, skip, limit, { createdAt: -1 });
         res.status(HTTP_STATUS.OK).json({ message: 'All posts with video', posts });
